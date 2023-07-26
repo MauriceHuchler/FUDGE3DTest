@@ -13,7 +13,7 @@ namespace Script {
 
   let avatar: ƒ.Node;
   let avatarRB: ƒ.ComponentRigidbody;
-
+  let weapon: ƒ.Node;
 
 
   function start(_event: CustomEvent): void {
@@ -23,6 +23,7 @@ namespace Script {
 
     mat = <ƒ.Material>ƒ.Project.getResourcesByName("ShaderFlat")[0];
     avatar = graph.getChildrenByName("Avatar")[0];
+    weapon = avatar.getChildrenByName("Weapon")[0];
     avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
     avatarRB.dampRotation = 100;
 
@@ -91,8 +92,17 @@ namespace Script {
 
   function mouseMove(_event: PointerEvent) {
     // console.log(_event.movementX);
-    avatar.mtxLocal.rotateY(_event.movementX * -0.2);
-    camera.mtxPivot.rotateX(_event.movementY* 0.2);
+    let x: number = _event.movementX * -0.2;
+    let y: number = _event.movementY * 0.2;
+    avatar.mtxLocal.rotateY(x);
+    camera.mtxPivot.rotateX(y);
+
+    moveWeapon(y);
+
+  }
+
+  function moveWeapon(_number: number): void {
+    weapon.mtxLocal.rotateX(_number);
   }
 
   function rayCast(): void {
@@ -101,6 +111,6 @@ namespace Script {
     forward.transform(camera.mtxWorld, false);
     let hitInfo = ƒ.Physics.raycast(camera.mtxWorld.translation, forward, 80, true);
 
-    ƒ.Debug.log("hit",hitInfo.hit);
+    ƒ.Debug.log("hit", hitInfo.hit);
   }
 }

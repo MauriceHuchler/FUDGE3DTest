@@ -48,12 +48,14 @@ var Script;
     let stepWidth = 2;
     let avatar;
     let avatarRB;
+    let weapon;
     function start(_event) {
         viewport = _event.detail;
         let graph = ƒ.Project.getResourcesByType(ƒ.Graph)[0];
         viewport.canvas.addEventListener("pointermove", mouseMove);
         mat = ƒ.Project.getResourcesByName("ShaderFlat")[0];
         avatar = graph.getChildrenByName("Avatar")[0];
+        weapon = avatar.getChildrenByName("Weapon")[0];
         avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
         avatarRB.dampRotation = 100;
         camera = avatar.getComponent(ƒ.ComponentCamera);
@@ -110,8 +112,14 @@ var Script;
     }
     function mouseMove(_event) {
         // console.log(_event.movementX);
-        avatar.mtxLocal.rotateY(_event.movementX * -0.2);
-        camera.mtxPivot.rotateX(_event.movementY * 0.2);
+        let x = _event.movementX * -0.2;
+        let y = _event.movementY * 0.2;
+        avatar.mtxLocal.rotateY(x);
+        camera.mtxPivot.rotateX(y);
+        moveWeapon(y);
+    }
+    function moveWeapon(_number) {
+        weapon.mtxLocal.rotateX(_number);
     }
     function rayCast() {
         // let camera:
