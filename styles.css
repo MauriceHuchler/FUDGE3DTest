@@ -11,6 +11,7 @@ dialog {
 }
 
 canvas.fullscreen { 
+  cursor: none;
   width: 100vw; 
   height: 100vh; 
 }
