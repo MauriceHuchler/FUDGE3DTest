@@ -53,7 +53,7 @@ namespace Avatar {
 
     async function shoot(_event: MouseEvent): Promise<void> {
         let instance = await ƒ.Project.createGraphInstance(bullet);
-        instance.mtxLocal.translation = weapon.mtxWorld.translation;
+        instance.mtxLocal.translation = camera.mtxWorld.translation;
         instance.mtxLocal.rotation = camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
         Script.graph.addChild(instance);

@@ -225,7 +225,7 @@
                     "ComponentMesh": [
                       {
                         "ƒ.ComponentMesh": {
-                          "idMesh": "MeshCube|2023-07-19T06:43:29.441Z|44976",
+                          "idMesh": "MeshSphere|2023-07-27T07:50:15.289Z|74025",
                           "pivot": {
                             "translation": "[0, 0, 0]",
                             "rotation": "[0, 0, 0]",
@@ -251,7 +251,7 @@
                           "Component": {
                             "active": true
                           },
-                          "idMaterial": "Material|2023-07-19T06:46:55.195Z|53916"
+                          "idMaterial": "Material|2023-07-27T13:33:14.152Z|18094"
                         }
                       }
                     ]
@@ -653,57 +653,6 @@
               }
             ]
           }
-        },
-        {
-          "ƒ.Node": {
-            "name": "Gun",
-            "active": true,
-            "components": {},
-            "children": [
-              {
-                "ƒ.Node": {
-                  "name": "Sprite",
-                  "active": true,
-                  "components": {
-                    "ComponentMesh": [
-                      {
-                        "ƒ.ComponentMesh": {
-                          "idMesh": "MeshImport|2023-07-27T12:50:53.095Z|54550",
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentMaterial": [
-                      {
-                        "ƒ.ComponentMaterial": {
-                          "sortForAlpha": false,
-                          "clrPrimary": "[1, 1, 1, 1]",
-                          "clrSecondary": "[1, 1, 1, 1]",
-                          "pivot": {
-                            "translation": "[0, 0]",
-                            "rotation": 0,
-                            "scaling": "[1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          },
-                          "idMaterial": "Material|2023-07-27T12:51:21.449Z|77404"
-                        }
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              }
-            ]
-          }
         }
       ],
       "idResource": "Graph|2023-07-19T06:52:21.388Z|98781",
@@ -756,7 +705,7 @@
               "local": {
                 "translation": "[0, 0, 0]",
                 "rotation": "[0, 0, 0]",
-                "scaling": "[0.09999998658895493, 0.10000000149011612, 0.19999998807907104]"
+                "scaling": "[0.020000003278255463, 0.020000003278255463, 0.03999998793005943]"
               },
               "Component": {
                 "active": true
@@ -768,7 +717,7 @@
           {
             "Script.ComponentBullet": {
               "active": true,
-              "speed": 50
+              "speed": 150
             }
           }
         ],
@@ -855,21 +804,6 @@
       "filetype": "OBJ"
     }
   },
-  "Material|2023-07-27T12:51:21.449Z|77404": {
-    "ƒ.Material": {
-      "name": "ShaderGouraudGreen",
-      "idResource": "Material|2023-07-27T12:51:21.449Z|77404",
-      "shader": "ShaderGouraudTextured",
-      "coat": {
-        "ƒ.CoatRemissiveTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-27T12:51:39.644Z|29372",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
   "TextureImage|2023-07-27T12:51:39.644Z|29372": {
     "ƒ.TextureImage": {
       "url": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Material1_BaseColor.png",
@@ -892,15 +826,14 @@
       }
     }
   },
-  "Material|2023-07-27T12:51:48.840Z|99105": {
+  "Material|2023-07-27T13:33:14.152Z|18094": {
     "ƒ.Material": {
-      "name": "ShaderGouraudRed",
-      "idResource": "Material|2023-07-27T12:51:48.840Z|99105",
-      "shader": "ShaderGouraudTextured",
+      "name": "ShaderGouraud",
+      "idResource": "Material|2023-07-27T13:33:14.152Z|18094",
+      "shader": "ShaderGouraud",
       "coat": {
-        "ƒ.CoatRemissiveTextured": {
+        "ƒ.CoatRemissive": {
           "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-27T12:51:40.929Z|09375",
           "diffuse": 1,
           "specular": 0
         }

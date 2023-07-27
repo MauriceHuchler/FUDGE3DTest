@@ -39,7 +39,7 @@ var Avatar;
     }
     async function shoot(_event) {
         let instance = await ƒ.Project.createGraphInstance(bullet);
-        instance.mtxLocal.translation = Avatar.weapon.mtxWorld.translation;
+        instance.mtxLocal.translation = Avatar.camera.mtxWorld.translation;
         instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
         Script.graph.addChild(instance);
