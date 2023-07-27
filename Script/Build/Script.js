@@ -1,4 +1,63 @@
 "use strict";
+var Avatar;
+(function (Avatar) {
+    var ƒ = FudgeCore;
+    let stepWidth = 2;
+    function init() {
+        Avatar.avatar = Script.graph.getChildrenByName("Avatar")[0];
+        Avatar.weapon = Avatar.avatar.getChildrenByName("Weapon")[0];
+        Avatar.avatarRB = Avatar.avatar.getComponent(ƒ.ComponentRigidbody);
+        Avatar.avatarRB.dampRotation = 100;
+        Avatar.camera = Avatar.avatar.getComponent(ƒ.ComponentCamera);
+        Script.viewport.canvas.addEventListener("pointermove", mouseMove);
+        ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
+    }
+    Avatar.init = init;
+    function movement(_deltaTime) {
+        let horizontal = 0;
+        let vertical = 0;
+        let gravity = 1;
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.A])) {
+            horizontal += 1 * stepWidth * _deltaTime;
+        }
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.D])) {
+            horizontal -= 1 * stepWidth * _deltaTime;
+        }
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.W])) {
+            vertical += 1 * stepWidth * _deltaTime;
+        }
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S])) {
+            vertical -= 1 * stepWidth * _deltaTime;
+        }
+        let pos = new ƒ.Vector3(horizontal, 0, vertical);
+        // avatarRB.mtxPivot.lookAt()
+        // avatarRB.mtxPivot.lookAt()
+        Avatar.avatar.mtxLocal.translate(pos, true);
+    }
+    function update() {
+        let deltaTime = ƒ.Loop.timeFrameGame / 1000;
+        movement(deltaTime);
+        rayCast();
+    }
+    function mouseMove(_event) {
+        // console.log(_event.movementX);
+        let x = _event.movementX * -0.2;
+        let y = _event.movementY * 0.2;
+        Avatar.avatar.mtxLocal.rotateY(x);
+        Avatar.camera.mtxPivot.rotateX(y);
+        moveWeapon(y);
+    }
+    function moveWeapon(_number) {
+        Avatar.weapon.mtxLocal.rotateX(_number);
+    }
+    function rayCast() {
+        // let camera:
+        let forward = ƒ.Vector3.Z();
+        forward.transform(Avatar.camera.mtxWorld, false);
+        let hitInfo = ƒ.Physics.raycast(Avatar.camera.mtxWorld.translation, forward, 80, true);
+        ƒ.Debug.log("hit", hitInfo.hit);
+    }
+})(Avatar || (Avatar = {}));
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
@@ -40,41 +99,25 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
-    let viewport = new ƒ.Viewport();
+    Script.viewport = new ƒ.Viewport();
     document.addEventListener("interactiveViewportStarted", start);
     let mat;
-    let graph;
-    let camera;
-    let stepWidth = 2;
-    let avatar;
-    let avatarRB;
-    let weapon;
     function start(_event) {
-        viewport = _event.detail;
-        let graph = ƒ.Project.getResourcesByType(ƒ.Graph)[0];
-        viewport.canvas.addEventListener("pointermove", mouseMove);
+        Script.viewport = _event.detail;
+        Script.graph = ƒ.Project.getResourcesByType(ƒ.Graph)[0];
         mat = ƒ.Project.getResourcesByName("ShaderFlat")[0];
-        avatar = graph.getChildrenByName("Avatar")[0];
-        weapon = avatar.getChildrenByName("Weapon")[0];
-        avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
-        avatarRB.dampRotation = 100;
-        camera = avatar.getComponent(ƒ.ComponentCamera);
-        viewport.initialize("MyViewport", graph, camera, viewport.canvas);
-        viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
+        Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
+        Avatar.init();
+        Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.viewport.canvas);
         // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start();
     }
     function update(_event) {
-        rayCast();
         ƒ.Physics.simulate(); // if physics is included and used
-        viewport.draw();
+        Script.viewport.draw();
         ƒ.AudioManager.default.update();
         let deltaTime = ƒ.Loop.timeFrameGame / 1000;
-        movement(deltaTime);
-    }
-    async function init() {
-        // viewport.getBranch().addChild(graph);
     }
     async function loadModels() {
         const loader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/BrickWall.gltf");
@@ -86,47 +129,8 @@ var Script;
         mesh.mtxLocal.translateZ(-2.5);
         // mesh2.mtxLocal.translateZ(2.5);
         console.log(mesh);
-        graph = ƒ.Project.getResourcesByName("NewGraph")[0];
-        graph.addChild(mesh);
-    }
-    function movement(_deltaTime) {
-        let horizontal = 0;
-        let vertical = 0;
-        let gravity = 1;
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.A])) {
-            horizontal += 1 * stepWidth * _deltaTime;
-        }
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.D])) {
-            horizontal -= 1 * stepWidth * _deltaTime;
-        }
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.W])) {
-            vertical += 1 * stepWidth * _deltaTime;
-        }
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S])) {
-            vertical -= 1 * stepWidth * _deltaTime;
-        }
-        let pos = new ƒ.Vector3(horizontal, 0, vertical);
-        // avatarRB.mtxPivot.lookAt()
-        // avatarRB.mtxPivot.lookAt()
-        avatar.mtxLocal.translate(pos, true);
-    }
-    function mouseMove(_event) {
-        // console.log(_event.movementX);
-        let x = _event.movementX * -0.2;
-        let y = _event.movementY * 0.2;
-        avatar.mtxLocal.rotateY(x);
-        camera.mtxPivot.rotateX(y);
-        moveWeapon(y);
-    }
-    function moveWeapon(_number) {
-        weapon.mtxLocal.rotateX(_number);
-    }
-    function rayCast() {
-        // let camera:
-        let forward = ƒ.Vector3.Z();
-        forward.transform(camera.mtxWorld, false);
-        let hitInfo = ƒ.Physics.raycast(camera.mtxWorld.translation, forward, 80, true);
-        ƒ.Debug.log("hit", hitInfo.hit);
+        Script.graph = ƒ.Project.getResourcesByName("NewGraph")[0];
+        Script.graph.addChild(mesh);
     }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
