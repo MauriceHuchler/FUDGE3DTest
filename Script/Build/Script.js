@@ -2,14 +2,17 @@
 var Avatar;
 (function (Avatar) {
     var ƒ = FudgeCore;
+    let bullet;
     let stepWidth = 2;
     function init() {
         Avatar.avatar = Script.graph.getChildrenByName("Avatar")[0];
         Avatar.weapon = Avatar.avatar.getChildrenByName("Weapon")[0];
         Avatar.avatarRB = Avatar.avatar.getComponent(ƒ.ComponentRigidbody);
         Avatar.avatarRB.dampRotation = 100;
+        bullet = ƒ.Project.getResourcesByName("Bullet")[0];
         Avatar.camera = Avatar.avatar.getComponent(ƒ.ComponentCamera);
         Script.viewport.canvas.addEventListener("pointermove", mouseMove);
+        Script.viewport.canvas.addEventListener("mousedown", shoot);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
     }
     Avatar.init = init;
@@ -33,6 +36,15 @@ var Avatar;
         // avatarRB.mtxPivot.lookAt()
         // avatarRB.mtxPivot.lookAt()
         Avatar.avatar.mtxLocal.translate(pos, true);
+    }
+    async function shoot(_event) {
+        let instance = await ƒ.Project.createGraphInstance(bullet);
+        instance.mtxLocal.translation = Avatar.weapon.mtxWorld.translation;
+        instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
+        instance.mtxLocal.rotateY(-90);
+        console.log(Avatar.camera.mtxWorld.rotation);
+        console.log(instance.mtxLocal.rotation);
+        Script.graph.addChild(instance);
     }
     function update() {
         let deltaTime = ƒ.Loop.timeFrameGame / 1000;
@@ -58,6 +70,45 @@ var Avatar;
         ƒ.Debug.log("hit", hitInfo.hit);
     }
 })(Avatar || (Avatar = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    ƒ.Project.registerScriptNamespace(Script);
+    class ComponentBullet extends ƒ.ComponentScript {
+        static iSubclass = ƒ.Component.registerSubclass(ComponentBullet);
+        speed = 50;
+        constructor() {
+            super();
+            // Don't start when running in editor
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            // Listen to this component being added to or removed from a node
+            this.addEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+            this.addEventListener("nodeDeserialized" /* NODE_DESERIALIZED */, this.hndEvent);
+        }
+        // Activate the functions of this component as response to events
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* COMPONENT_ADD */:
+                    break;
+                case "componentRemove" /* COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+                    break;
+                case "nodeDeserialized" /* NODE_DESERIALIZED */:
+                    ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+                    // if deserialized the node is now fully reconstructed and access to all its components and children is possible
+                    break;
+            }
+        };
+        update = () => {
+            let deltaTime = ƒ.Loop.timeFrameGame / 1000;
+            this.node.mtxLocal.translateX(this.speed * deltaTime, true);
+        };
+    }
+    Script.ComponentBullet = ComponentBullet;
+})(Script || (Script = {}));
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;

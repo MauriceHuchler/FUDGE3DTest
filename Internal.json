@@ -395,8 +395,6 @@
                   "name": "Wall1",
                   "active": true,
                   "components": {
-                    "ComponentMesh": [],
-                    "ComponentMaterial": [],
                     "ComponentTransform": [
                       {
                         "ƒ.ComponentTransform": {
@@ -489,6 +487,141 @@
       ],
       "idResource": "Graph|2023-07-19T06:52:21.388Z|98781",
       "type": "Graph"
+    }
+  },
+  "MeshSphere|2023-07-27T07:50:15.289Z|74025": {
+    "ƒ.MeshSphere": {
+      "idResource": "MeshSphere|2023-07-27T07:50:15.289Z|74025",
+      "name": "MeshSphere",
+      "type": "MeshSphere",
+      "longitudes": 16,
+      "latitudes": 16
+    }
+  },
+  "Material|2023-07-27T08:01:30.224Z|04567": {
+    "ƒ.Material": {
+      "name": "ShaderLit",
+      "idResource": "Material|2023-07-27T08:01:30.224Z|04567",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  },
+  "Graph|2023-07-27T07:48:00.688Z|79067": {
+    "ƒ.Graph": {
+      "name": "Bullet",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[0.09999998658895493, 0.09999998658895493, 0.4999999701976776]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentBullet": [
+          {
+            "Script.ComponentBullet": {
+              "active": true
+            }
+          }
+        ],
+        "ComponentRigidbody": [
+          {
+            "ƒ.ComponentRigidbody": {
+              "initialization": "TO_PIVOT",
+              "friction": 0.2,
+              "restitution": 0.2,
+              "mass": 1,
+              "dampTranslation": 0.1,
+              "dampRotation": 0.1,
+              "effectGravity": 1,
+              "typeBody": "KINEMATIC",
+              "typeCollider": "CAPSULE",
+              "isTrigger": false,
+              "id": 0,
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[90, 0, 0]",
+                "scaling": "[0.6999999284744263, 0.7999999523162842, 0.3999999165534973]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Sprite",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshSphere|2023-07-27T07:50:15.289Z|74025",
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2023-07-27T08:01:30.224Z|04567"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2023-07-27T07:48:00.688Z|79067",
+      "type": "Graph"
+    }
+  },
+  "Material|2023-07-27T07:50:20.552Z|27150": {
+    "ƒ.Material": {
+      "name": "ShaderGouraud",
+      "idResource": "Material|2023-07-27T07:50:20.552Z|27150",
+      "shader": "ShaderGouraud",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
     }
   }
 }

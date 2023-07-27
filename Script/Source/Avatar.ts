@@ -6,6 +6,8 @@ namespace Avatar {
     export let weapon: ƒ.Node;
     export let camera: ƒ.ComponentCamera;
 
+    let bullet: ƒ.Graph;
+
     let stepWidth: number = 2;
 
 
@@ -15,9 +17,12 @@ namespace Avatar {
         avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
         avatarRB.dampRotation = 100;
 
+        bullet = <ƒ.Graph>ƒ.Project.getResourcesByName("Bullet")[0];
+
         camera = avatar.getComponent(ƒ.ComponentCamera);
 
         Script.viewport.canvas.addEventListener("pointermove", mouseMove);
+        Script.viewport.canvas.addEventListener("mousedown", shoot);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
 
@@ -44,6 +49,17 @@ namespace Avatar {
         // avatarRB.mtxPivot.lookAt()
         // avatarRB.mtxPivot.lookAt()
         avatar.mtxLocal.translate(pos, true);
+    }
+
+    async function shoot(_event: MouseEvent): Promise<void> {
+        let instance = await ƒ.Project.createGraphInstance(bullet);
+        instance.mtxLocal.translation = weapon.mtxWorld.translation;
+        instance.mtxLocal.rotation = camera.mtxWorld.rotation;
+        instance.mtxLocal.rotateY(-90);
+        console.log(camera.mtxWorld.rotation);
+        console.log(instance.mtxLocal.rotation);
+        Script.graph.addChild(instance);
+
     }
 
     function update(): void {
