@@ -14,6 +14,21 @@ declare namespace Script {
         constructor();
         hndEvent: (_event: Event) => void;
         update: () => void;
+        onCollisionEneter: (_event: ƒ.EventPhysics) => void;
+        destroy: () => void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    enum TAG {
+        WALL = 0,
+        ENEMY = 1
+    }
+    class ComponentTag extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        tag: TAG;
+        constructor();
+        hndEvent: (_event: Event) => void;
     }
 }
 declare namespace Script {

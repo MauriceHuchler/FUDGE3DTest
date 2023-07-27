@@ -56,8 +56,6 @@ namespace Avatar {
         instance.mtxLocal.translation = weapon.mtxWorld.translation;
         instance.mtxLocal.rotation = camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
-        console.log(camera.mtxWorld.rotation);
-        console.log(instance.mtxLocal.rotation);
         Script.graph.addChild(instance);
 
     }
@@ -91,7 +89,10 @@ namespace Avatar {
         forward.transform(camera.mtxWorld, false);
         let hitInfo = ƒ.Physics.raycast(camera.mtxWorld.translation, forward, 80, true);
 
-        ƒ.Debug.log("hit", hitInfo.hit);
+        // ƒ.Debug.log("hit", hitInfo.hit);
     }
 
+    
+
 }
+

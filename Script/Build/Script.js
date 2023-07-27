@@ -42,8 +42,6 @@ var Avatar;
         instance.mtxLocal.translation = Avatar.weapon.mtxWorld.translation;
         instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
-        console.log(Avatar.camera.mtxWorld.rotation);
-        console.log(instance.mtxLocal.rotation);
         Script.graph.addChild(instance);
     }
     function update() {
@@ -67,7 +65,7 @@ var Avatar;
         let forward = ƒ.Vector3.Z();
         forward.transform(Avatar.camera.mtxWorld, false);
         let hitInfo = ƒ.Physics.raycast(Avatar.camera.mtxWorld.translation, forward, 80, true);
-        ƒ.Debug.log("hit", hitInfo.hit);
+        // ƒ.Debug.log("hit", hitInfo.hit);
     }
 })(Avatar || (Avatar = {}));
 var Script;
@@ -76,7 +74,7 @@ var Script;
     ƒ.Project.registerScriptNamespace(Script);
     class ComponentBullet extends ƒ.ComponentScript {
         static iSubclass = ƒ.Component.registerSubclass(ComponentBullet);
-        speed = 50;
+        speed = 1;
         constructor() {
             super();
             // Don't start when running in editor
@@ -98,6 +96,7 @@ var Script;
                     break;
                 case "nodeDeserialized" /* NODE_DESERIALIZED */:
                     ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+                    this.node.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.onCollisionEneter);
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }
@@ -106,8 +105,62 @@ var Script;
             let deltaTime = ƒ.Loop.timeFrameGame / 1000;
             this.node.mtxLocal.translateX(this.speed * deltaTime, true);
         };
+        onCollisionEneter = (_event) => {
+            let cmpTag = _event.cmpRigidbody.node.getComponent(Script.ComponentTag);
+            if (cmpTag == null) {
+                return;
+            }
+            let tag = cmpTag.tag;
+            console.log(this.node.mtxLocal.rotation);
+            this.destroy();
+        };
+        destroy = () => {
+            ƒ.Loop.removeEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+            Script.graph.removeChild(this.node);
+        };
     }
     Script.ComponentBullet = ComponentBullet;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    let TAG;
+    (function (TAG) {
+        TAG[TAG["WALL"] = 0] = "WALL";
+        TAG[TAG["ENEMY"] = 1] = "ENEMY";
+    })(TAG = Script.TAG || (Script.TAG = {}));
+    ƒ.Project.registerScriptNamespace(Script);
+    class ComponentTag extends ƒ.ComponentScript {
+        static iSubclass = ƒ.Component.registerSubclass(ComponentTag);
+        tag;
+        constructor() {
+            super();
+            // Listen to this component being added to or removed from a node
+            this.addEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+            this.addEventListener("nodeDeserialized" /* NODE_DESERIALIZED */, this.hndEvent);
+        }
+        // Activate the functions of this component as response to events
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* COMPONENT_ADD */:
+                    break;
+                case "componentRemove" /* COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+                    break;
+                case "nodeDeserialized" /* NODE_DESERIALIZED */:
+                    if (this.node.name.includes("Wall")) {
+                        this.tag = TAG.WALL;
+                    }
+                    // ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
+                    // this.node.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.onCollisionEneter);
+                    // if deserialized the node is now fully reconstructed and access to all its components and children is possible
+                    break;
+            }
+        };
+    }
+    Script.ComponentTag = ComponentTag;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {

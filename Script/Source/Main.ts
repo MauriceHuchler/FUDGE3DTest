@@ -48,6 +48,8 @@ namespace Script {
     graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
     graph.addChild(mesh);
   }
-
+  interface Tagable {
+    tag: string;
+  }
 
 }

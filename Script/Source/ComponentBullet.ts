@@ -5,7 +5,7 @@ namespace Script {
     export class ComponentBullet extends ƒ.ComponentScript {
         public static readonly iSubclass: number = ƒ.Component.registerSubclass(ComponentBullet);
 
-        public speed: number = 50;
+        public speed: number = 1;
         constructor() {
             super();
 
@@ -30,7 +30,7 @@ namespace Script {
                     break;
                 case ƒ.EVENT.NODE_DESERIALIZED:
                     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
-
+                    this.node.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.onCollisionEneter);
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }
@@ -39,7 +39,23 @@ namespace Script {
 
         public update = () => {
             let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
-            this.node.mtxLocal.translateX(this.speed * deltaTime,true);
+            this.node.mtxLocal.translateX(this.speed * deltaTime, true);
+        }
+
+        public onCollisionEneter = (_event: ƒ.EventPhysics) => {
+            let cmpTag: ComponentTag = _event.cmpRigidbody.node.getComponent(ComponentTag)
+            if (cmpTag == null) {
+                return;
+            }
+            let tag: TAG = cmpTag.tag;
+            console.log(this.node.mtxLocal.rotation);
+            this.destroy();
+        }
+
+
+        public destroy = () => {
+            ƒ.Loop.removeEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
+            Script.graph.removeChild(this.node);
         }
 
     }
