@@ -34,6 +34,17 @@ namespace Script {
     let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
   }
 
+  export function getTag(_event: ƒ.EventPhysics): TAG {
+    let myTag: TAG = null;
+    let cmpTag: ComponentTag = _event.cmpRigidbody.node.getComponent(ComponentTag);
+    if (cmpTag == null) {
+      return myTag;
+    }
+    else {
+      return cmpTag.tag;
+    }
+  }
+
 
   async function loadModels(): Promise<void> {
     const loader: ƒ.GLTFLoader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/BrickWall.gltf");

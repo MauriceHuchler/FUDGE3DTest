@@ -14,6 +14,7 @@ var Avatar;
         Script.viewport.canvas.addEventListener("pointermove", mouseMove);
         Script.viewport.canvas.addEventListener("mousedown", shoot);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
+        Avatar.avatar.getComponent(ƒ.ComponentRigidbody).addEventListener("TriggerEnteredCollision" /* TRIGGER_ENTER */, onCollisionEnter);
     }
     Avatar.init = init;
     function movement(_deltaTime) {
@@ -67,6 +68,18 @@ var Avatar;
         let hitInfo = ƒ.Physics.raycast(Avatar.camera.mtxWorld.translation, forward, 80, true);
         // ƒ.Debug.log("hit", hitInfo.hit);
     }
+    function onCollisionEnter(_event) {
+        console.log(_event);
+        let cmpTag = Script.getTag(_event);
+        if (cmpTag == null) {
+            return;
+        }
+        switch (cmpTag) {
+            case Script.TAG.WALL:
+                console.log("hi");
+                Avatar.avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
+        }
+    }
 })(Avatar || (Avatar = {}));
 var Script;
 (function (Script) {
@@ -106,13 +119,20 @@ var Script;
             this.node.mtxLocal.translateX(this.speed * deltaTime, true);
         };
         onCollisionEneter = (_event) => {
-            let cmpTag = _event.cmpRigidbody.node.getComponent(Script.ComponentTag);
+            let cmpTag = Script.getTag(_event);
             if (cmpTag == null) {
                 return;
             }
-            let tag = cmpTag.tag;
-            console.log(this.node.mtxLocal.rotation);
-            this.destroy();
+            switch (cmpTag) {
+                case Script.TAG.WALL:
+                    this.destroy();
+                    break;
+                case Script.TAG.ENEMY:
+                    break;
+                case Script.TAG.FLOOR:
+                    this.destroy();
+                    break;
+            }
         };
         destroy = () => {
             ƒ.Loop.removeEventListener("loopFrame" /* LOOP_FRAME */, this.update);
@@ -126,8 +146,9 @@ var Script;
     var ƒ = FudgeCore;
     let TAG;
     (function (TAG) {
-        TAG[TAG["WALL"] = 0] = "WALL";
-        TAG[TAG["ENEMY"] = 1] = "ENEMY";
+        TAG[TAG["FLOOR"] = 0] = "FLOOR";
+        TAG[TAG["WALL"] = 1] = "WALL";
+        TAG[TAG["ENEMY"] = 2] = "ENEMY";
     })(TAG = Script.TAG || (Script.TAG = {}));
     ƒ.Project.registerScriptNamespace(Script);
     class ComponentTag extends ƒ.ComponentScript {
@@ -223,6 +244,17 @@ var Script;
         ƒ.AudioManager.default.update();
         let deltaTime = ƒ.Loop.timeFrameGame / 1000;
     }
+    function getTag(_event) {
+        let myTag = null;
+        let cmpTag = _event.cmpRigidbody.node.getComponent(Script.ComponentTag);
+        if (cmpTag == null) {
+            return myTag;
+        }
+        else {
+            return cmpTag.tag;
+        }
+    }
+    Script.getTag = getTag;
     async function loadModels() {
         const loader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/BrickWall.gltf");
         const mesh = await loader.getScene();

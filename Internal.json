@@ -55,6 +55,29 @@
       }
     }
   },
+  "MeshSphere|2023-07-27T07:50:15.289Z|74025": {
+    "ƒ.MeshSphere": {
+      "idResource": "MeshSphere|2023-07-27T07:50:15.289Z|74025",
+      "name": "MeshSphere",
+      "type": "MeshSphere",
+      "longitudes": 16,
+      "latitudes": 16
+    }
+  },
+  "Material|2023-07-27T13:33:14.152Z|18094": {
+    "ƒ.Material": {
+      "name": "ShaderGouraud",
+      "idResource": "Material|2023-07-27T13:33:14.152Z|18094",
+      "shader": "ShaderGouraud",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
   "Graph|2023-07-19T06:52:21.388Z|98781": {
     "ƒ.Graph": {
       "name": "NewGraph",
@@ -177,7 +200,7 @@
                     "effectGravity": 1,
                     "typeBody": "KINEMATIC",
                     "typeCollider": "CUBE",
-                    "isTrigger": false,
+                    "isTrigger": true,
                     "id": 1,
                     "pivot": {
                       "translation": "[0, 0, 0]",
@@ -455,7 +478,7 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "FloorWall",
+                  "name": "Floor",
                   "active": true,
                   "components": {
                     "ComponentTransform": [
@@ -659,15 +682,6 @@
       "type": "Graph"
     }
   },
-  "MeshSphere|2023-07-27T07:50:15.289Z|74025": {
-    "ƒ.MeshSphere": {
-      "idResource": "MeshSphere|2023-07-27T07:50:15.289Z|74025",
-      "name": "MeshSphere",
-      "type": "MeshSphere",
-      "longitudes": 16,
-      "latitudes": 16
-    }
-  },
   "Material|2023-07-27T08:01:30.224Z|04567": {
     "ƒ.Material": {
       "name": "ShaderLit",
@@ -823,20 +837,6 @@
         "idResource": "TextureImage|2023-07-27T12:51:40.929Z|09375",
         "name": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Mateiral2_BaseColor.png",
         "mipmap": "CRISP"
-      }
-    }
-  },
-  "Material|2023-07-27T13:33:14.152Z|18094": {
-    "ƒ.Material": {
-      "name": "ShaderGouraud",
-      "idResource": "Material|2023-07-27T13:33:14.152Z|18094",
-      "shader": "ShaderGouraud",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
       }
     }
   }

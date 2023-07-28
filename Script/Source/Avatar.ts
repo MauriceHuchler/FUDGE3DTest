@@ -25,6 +25,8 @@ namespace Avatar {
         Script.viewport.canvas.addEventListener("mousedown", shoot);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
+        avatar.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.TRIGGER_ENTER, onCollisionEnter);
+
 
     }
 
@@ -65,7 +67,6 @@ namespace Avatar {
 
         movement(deltaTime);
         rayCast();
-
     }
 
     function mouseMove(_event: PointerEvent) {
@@ -92,7 +93,19 @@ namespace Avatar {
         // ƒ.Debug.log("hit", hitInfo.hit);
     }
 
-    
+    function onCollisionEnter(_event: ƒ.EventPhysics) {
+        console.log(_event);
+        let cmpTag: Script.TAG = Script.getTag(_event);
+        if (cmpTag == null) {
+            return;
+        }
+        switch (cmpTag) {
+            case Script.TAG.WALL:
+                console.log("hi");
+                avatar.mtxLocal.translate(ƒ.Vector3.ZERO(),true);
+        }
+    }
+
 
 }
 

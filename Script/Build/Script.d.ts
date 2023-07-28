@@ -21,8 +21,9 @@ declare namespace Script {
 declare namespace Script {
     import ƒ = FudgeCore;
     enum TAG {
-        WALL = 0,
-        ENEMY = 1
+        FLOOR = 0,
+        WALL = 1,
+        ENEMY = 2
     }
     class ComponentTag extends ƒ.ComponentScript {
         static readonly iSubclass: number;
@@ -44,4 +45,5 @@ declare namespace Script {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
     let graph: ƒ.Graph;
+    function getTag(_event: ƒ.EventPhysics): TAG;
 }

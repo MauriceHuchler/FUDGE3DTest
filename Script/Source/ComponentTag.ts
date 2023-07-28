@@ -1,6 +1,7 @@
 namespace Script {
     import ƒ = FudgeCore;
     export enum TAG {
+        FLOOR,
         WALL,
         ENEMY
     }

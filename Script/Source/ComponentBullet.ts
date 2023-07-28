@@ -43,13 +43,20 @@ namespace Script {
         }
 
         public onCollisionEneter = (_event: ƒ.EventPhysics) => {
-            let cmpTag: ComponentTag = _event.cmpRigidbody.node.getComponent(ComponentTag)
+            let cmpTag: TAG = getTag(_event);
             if (cmpTag == null) {
                 return;
             }
-            let tag: TAG = cmpTag.tag;
-            console.log(this.node.mtxLocal.rotation);
-            this.destroy();
+            switch (cmpTag) {
+                case TAG.WALL:
+                    this.destroy();
+                    break;
+                case TAG.ENEMY:
+                    break;
+                case TAG.FLOOR:
+                    this.destroy();
+                    break;
+            }
         }
 
 
