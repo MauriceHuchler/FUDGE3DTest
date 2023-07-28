@@ -45,5 +45,6 @@ declare namespace Script {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
     let graph: ƒ.Graph;
+    let canvas: HTMLCanvasElement;
     function getTag(_event: ƒ.EventPhysics): TAG;
 }

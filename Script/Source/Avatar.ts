@@ -9,6 +9,7 @@ namespace Avatar {
     let bullet: ƒ.Graph;
 
     let stepWidth: number = 2;
+    let moveVector: ƒ.Vector3;
 
 
     export function init(): void {
@@ -21,8 +22,8 @@ namespace Avatar {
 
         camera = avatar.getComponent(ƒ.ComponentCamera);
 
-        Script.viewport.canvas.addEventListener("pointermove", mouseMove);
-        Script.viewport.canvas.addEventListener("mousedown", shoot);
+        Script.canvas.addEventListener("pointermove", mouseMove);
+        Script.canvas.addEventListener("mousedown", shoot);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         avatar.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.TRIGGER_ENTER, onCollisionEnter);
@@ -46,16 +47,17 @@ namespace Avatar {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S])) {
             vertical -= 1 * stepWidth * _deltaTime;
         }
-        let pos: ƒ.Vector3 = new ƒ.Vector3(horizontal, 0, vertical);
+        moveVector = new ƒ.Vector3(horizontal, 0, vertical);
 
         // avatarRB.mtxPivot.lookAt()
         // avatarRB.mtxPivot.lookAt()
-        avatar.mtxLocal.translate(pos, true);
+        avatar.mtxLocal.translate(moveVector, true);
     }
 
     async function shoot(_event: MouseEvent): Promise<void> {
         let instance = await ƒ.Project.createGraphInstance(bullet);
-        instance.mtxLocal.translation = camera.mtxWorld.translation;
+        console.log(moveVector);
+        instance.mtxLocal.translation = ƒ.Vector3.SUM(camera.mtxWorld.translation,ƒ.Vector3.SCALE(moveVector,25));
         instance.mtxLocal.rotation = camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
         Script.graph.addChild(instance);

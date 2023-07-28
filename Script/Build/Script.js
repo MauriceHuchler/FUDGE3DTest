@@ -4,6 +4,7 @@ var Avatar;
     var ƒ = FudgeCore;
     let bullet;
     let stepWidth = 2;
+    let moveVector;
     function init() {
         Avatar.avatar = Script.graph.getChildrenByName("Avatar")[0];
         Avatar.weapon = Avatar.avatar.getChildrenByName("Weapon")[0];
@@ -11,8 +12,8 @@ var Avatar;
         Avatar.avatarRB.dampRotation = 100;
         bullet = ƒ.Project.getResourcesByName("Bullet")[0];
         Avatar.camera = Avatar.avatar.getComponent(ƒ.ComponentCamera);
-        Script.viewport.canvas.addEventListener("pointermove", mouseMove);
-        Script.viewport.canvas.addEventListener("mousedown", shoot);
+        Script.canvas.addEventListener("pointermove", mouseMove);
+        Script.canvas.addEventListener("mousedown", shoot);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         Avatar.avatar.getComponent(ƒ.ComponentRigidbody).addEventListener("TriggerEnteredCollision" /* TRIGGER_ENTER */, onCollisionEnter);
     }
@@ -33,14 +34,15 @@ var Avatar;
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S])) {
             vertical -= 1 * stepWidth * _deltaTime;
         }
-        let pos = new ƒ.Vector3(horizontal, 0, vertical);
+        moveVector = new ƒ.Vector3(horizontal, 0, vertical);
         // avatarRB.mtxPivot.lookAt()
         // avatarRB.mtxPivot.lookAt()
-        Avatar.avatar.mtxLocal.translate(pos, true);
+        Avatar.avatar.mtxLocal.translate(moveVector, true);
     }
     async function shoot(_event) {
         let instance = await ƒ.Project.createGraphInstance(bullet);
-        instance.mtxLocal.translation = Avatar.camera.mtxWorld.translation;
+        console.log(moveVector);
+        instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.camera.mtxWorld.translation, ƒ.Vector3.SCALE(moveVector, 25));
         instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
         instance.mtxLocal.rotateY(-90);
         Script.graph.addChild(instance);
@@ -225,15 +227,17 @@ var Script;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     Script.viewport = new ƒ.Viewport();
-    document.addEventListener("interactiveViewportStarted", start);
+    window.addEventListener("load", start);
     let mat;
-    function start(_event) {
-        Script.viewport = _event.detail;
+    async function start(_event) {
+        await ƒ.Project.loadResourcesFromHTML();
+        Script.canvas = document.querySelector("canvas");
         Script.graph = ƒ.Project.getResourcesByType(ƒ.Graph)[0];
         mat = ƒ.Project.getResourcesByName("ShaderFlat")[0];
         Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
         Avatar.init();
-        Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.viewport.canvas);
+        loadModels();
+        Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.canvas);
         // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start();
@@ -241,7 +245,7 @@ var Script;
     function update(_event) {
         ƒ.Physics.simulate(); // if physics is included and used
         Script.viewport.draw();
-        ƒ.AudioManager.default.update();
+        // ƒ.AudioManager.default.update();
         let deltaTime = ƒ.Loop.timeFrameGame / 1000;
     }
     function getTag(_event) {
@@ -262,7 +266,7 @@ var Script;
         mesh.addComponent(new ƒ.ComponentTransform());
         // let mesh2: ƒ.Node = ƒ.Project.createGraphInstance(mesh).;
         console.log(ƒ.Serializer.serialize(mesh));
-        mesh.mtxLocal.translateZ(-2.5);
+        mesh.mtxLocal.translateZ(2.5);
         // mesh2.mtxLocal.translateZ(2.5);
         console.log(mesh);
         Script.graph = ƒ.Project.getResourcesByName("NewGraph")[0];

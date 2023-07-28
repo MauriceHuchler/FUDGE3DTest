@@ -3,14 +3,15 @@ namespace Script {
   ƒ.Debug.info("Main Program Template running!");
 
   export let viewport: ƒ.Viewport = new ƒ.Viewport();
-  document.addEventListener("interactiveViewportStarted", <EventListener>start);
+  window.addEventListener("load", <EventListener>start);
 
   let mat: ƒ.Material;
   export let graph: ƒ.Graph;
+  export let canvas: HTMLCanvasElement;
 
-
-  function start(_event: CustomEvent): void {
-    viewport = _event.detail;
+  async function start(_event: Event): Promise<void> {
+    await ƒ.Project.loadResourcesFromHTML();
+    canvas = document.querySelector("canvas");
     graph = <ƒ.Graph>ƒ.Project.getResourcesByType(ƒ.Graph)[0];
 
 
@@ -19,8 +20,8 @@ namespace Script {
     viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
 
     Avatar.init();
-    viewport.initialize("MyViewport", graph, Avatar.camera, viewport.canvas);
-
+    loadModels();
+    viewport.initialize("MyViewport", graph, Avatar.camera, canvas);
 
     // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -30,7 +31,7 @@ namespace Script {
   function update(_event: Event): void {
     ƒ.Physics.simulate();  // if physics is included and used
     viewport.draw();
-    ƒ.AudioManager.default.update();
+    // ƒ.AudioManager.default.update();
     let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
   }
 
@@ -53,7 +54,7 @@ namespace Script {
     mesh.addComponent(new ƒ.ComponentTransform());
     // let mesh2: ƒ.Node = ƒ.Project.createGraphInstance(mesh).;
     console.log(<ƒ.Node>ƒ.Serializer.serialize(mesh));
-    mesh.mtxLocal.translateZ(-2.5);
+    mesh.mtxLocal.translateZ(2.5);
     // mesh2.mtxLocal.translateZ(2.5);
     console.log(mesh);
     graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
