@@ -284,72 +284,6 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "Weapon",
-                  "active": true,
-                  "components": {
-                    "ComponentTransform": [
-                      {
-                        "ƒ.ComponentTransform": {
-                          "local": {
-                            "translation": "[-0.4000000059604645, 0.6000000238418579, 0.6000000238418579]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "children": [
-                    {
-                      "ƒ.Node": {
-                        "name": "Sprite",
-                        "active": true,
-                        "components": {
-                          "ComponentMesh": [
-                            {
-                              "ƒ.ComponentMesh": {
-                                "idMesh": "MeshCube|2023-07-19T06:43:29.441Z|44976",
-                                "pivot": {
-                                  "translation": "[0, -0.20000001788139343, 0]",
-                                  "rotation": "[0, 0, 0]",
-                                  "scaling": "[0.09999992698431015, 0.09999992698431015, 0.6999999284744263]"
-                                },
-                                "Component": {
-                                  "active": true
-                                }
-                              }
-                            }
-                          ],
-                          "ComponentMaterial": [
-                            {
-                              "ƒ.ComponentMaterial": {
-                                "sortForAlpha": false,
-                                "clrPrimary": "[1, 1, 1, 1]",
-                                "clrSecondary": "[1, 1, 1, 1]",
-                                "pivot": {
-                                  "translation": "[0, 0]",
-                                  "rotation": 0,
-                                  "scaling": "[1, 1]"
-                                },
-                                "Component": {
-                                  "active": true
-                                },
-                                "idMaterial": "Material|2023-07-19T06:46:55.195Z|53916"
-                              }
-                            }
-                          ]
-                        },
-                        "children": []
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "ƒ.Node": {
                   "name": "Light",
                   "active": true,
                   "components": {
@@ -623,7 +557,7 @@
                       {
                         "Script.ComponentTag": {
                           "active": true,
-                          "tag": 0
+                          "tag": 1
                         }
                       }
                     ]
@@ -731,7 +665,7 @@
           {
             "Script.ComponentBullet": {
               "active": true,
-              "speed": 150
+              "speed": 350
             }
           }
         ],

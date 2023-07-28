@@ -7,7 +7,6 @@ var Avatar;
     let moveVector;
     function init() {
         Avatar.avatar = Script.graph.getChildrenByName("Avatar")[0];
-        Avatar.weapon = Avatar.avatar.getChildrenByName("Weapon")[0];
         Avatar.avatarRB = Avatar.avatar.getComponent(ƒ.ComponentRigidbody);
         Avatar.avatarRB.dampRotation = 100;
         bullet = ƒ.Project.getResourcesByName("Bullet")[0];
@@ -42,9 +41,10 @@ var Avatar;
     async function shoot(_event) {
         if (_event.button == 0) {
             let instance = await ƒ.Project.createGraphInstance(bullet);
-            instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.camera.mtxWorld.translation);
+            instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.weapon.mtxWorld.translation);
             instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
             instance.mtxLocal.rotateY(-90);
+            instance.mtxLocal.translate(new ƒ.Vector3(0, 10, 0), true);
             Script.graph.addChild(instance);
         }
         if (Script.canvas.requestPointerLock) {
@@ -65,6 +65,7 @@ var Avatar;
         moveWeapon(y);
     }
     function moveWeapon(_number) {
+        // weapon.mtxLocal.rotation = camera.mtxPivot.rotation;
         Avatar.weapon.mtxLocal.rotateX(_number);
     }
     function rayCast() {
@@ -241,8 +242,8 @@ var Script;
         mat = ƒ.Project.getResourcesByName("ShaderFlat")[0];
         Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
         Script.canvas.requestPointerLock();
-        Avatar.init();
         loadModels();
+        Avatar.init();
         Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.canvas);
         // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
@@ -266,17 +267,24 @@ var Script;
     }
     Script.getTag = getTag;
     async function loadModels() {
-        const loader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/BrickWall.gltf");
+        const loader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/Weapon.gltf");
         const mesh = await loader.getScene();
+        mesh.name = "Gun";
         mesh.addComponent(new ƒ.ComponentMaterial(mat));
         mesh.addComponent(new ƒ.ComponentTransform());
         // let mesh2: ƒ.Node = ƒ.Project.createGraphInstance(mesh).;
-        console.log(ƒ.Serializer.serialize(mesh));
-        mesh.mtxLocal.translateZ(2.5);
+        // mesh.mtxLocal.translateZ(1);
+        // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
+        // cmpMesh.mtxPivot.translateY(0);
+        mesh.mtxLocal.translateZ(1);
+        mesh.mtxLocal.translateY(.35);
         // mesh2.mtxLocal.translateZ(2.5);
         console.log(mesh);
         Script.graph = ƒ.Project.getResourcesByName("NewGraph")[0];
-        Script.graph.addChild(mesh);
+        // graph.addChild(mesh);
+        Avatar.avatar.addChild(mesh);
+        console.log(Avatar.avatar);
+        Avatar.weapon = mesh;
     }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

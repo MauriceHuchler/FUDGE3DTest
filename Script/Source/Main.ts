@@ -20,8 +20,8 @@ namespace Script {
 
     viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
     canvas.requestPointerLock()
-    Avatar.init();
     loadModels();
+    Avatar.init();
     viewport.initialize("MyViewport", graph, Avatar.camera, canvas);
 
     // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -49,20 +49,27 @@ namespace Script {
 
 
   async function loadModels(): Promise<void> {
-    const loader: ƒ.GLTFLoader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/BrickWall.gltf");
+    const loader: ƒ.GLTFLoader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/Weapon.gltf");
     const mesh: ƒ.Node = await loader.getScene();
+    mesh.name = "Gun";
     mesh.addComponent(new ƒ.ComponentMaterial(mat));
     mesh.addComponent(new ƒ.ComponentTransform());
     // let mesh2: ƒ.Node = ƒ.Project.createGraphInstance(mesh).;
-    console.log(<ƒ.Node>ƒ.Serializer.serialize(mesh));
-    mesh.mtxLocal.translateZ(2.5);
+    // mesh.mtxLocal.translateZ(1);
+    // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
+    // cmpMesh.mtxPivot.translateY(0);
+    mesh.mtxLocal.translateZ(1);
+    mesh.mtxLocal.translateY(.35);
+
     // mesh2.mtxLocal.translateZ(2.5);
     console.log(mesh);
     graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
-    graph.addChild(mesh);
+    // graph.addChild(mesh);
+    Avatar.avatar.addChild(mesh);
+    console.log(Avatar.avatar);
+    Avatar.weapon = mesh;
+    
   }
-  interface Tagable {
-    tag: string;
-  }
+
 
 }

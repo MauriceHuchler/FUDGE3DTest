@@ -14,7 +14,6 @@ namespace Avatar {
 
     export function init(): void {
         avatar = Script.graph.getChildrenByName("Avatar")[0];
-        weapon = avatar.getChildrenByName("Weapon")[0];
         avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
         avatarRB.dampRotation = 100;
 
@@ -57,9 +56,10 @@ namespace Avatar {
     async function shoot(_event: MouseEvent): Promise<void> {
         if (_event.button == 0) {
             let instance = await ƒ.Project.createGraphInstance(bullet);
-            instance.mtxLocal.translation = ƒ.Vector3.SUM(camera.mtxWorld.translation);
+            instance.mtxLocal.translation = ƒ.Vector3.SUM(weapon.mtxWorld.translation);
             instance.mtxLocal.rotation = camera.mtxWorld.rotation;
             instance.mtxLocal.rotateY(-90);
+            instance.mtxLocal.translate(new ƒ.Vector3(0,10,0),true);
             Script.graph.addChild(instance);
         }
 
@@ -90,6 +90,7 @@ namespace Avatar {
     }
 
     function moveWeapon(_number: number): void {
+        // weapon.mtxLocal.rotation = camera.mtxPivot.rotation;
         weapon.mtxLocal.rotateX(_number);
     }
 
