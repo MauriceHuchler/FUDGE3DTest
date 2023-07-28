@@ -4,7 +4,7 @@ namespace Script {
 
   export let viewport: ƒ.Viewport = new ƒ.Viewport();
   window.addEventListener("load", <EventListener>start);
-
+  let isLocked: boolean;
   let mat: ƒ.Material;
   export let graph: ƒ.Graph;
   export let canvas: HTMLCanvasElement;
@@ -14,11 +14,12 @@ namespace Script {
     canvas = document.querySelector("canvas");
     graph = <ƒ.Graph>ƒ.Project.getResourcesByType(ƒ.Graph)[0];
 
+   
 
     mat = <ƒ.Material>ƒ.Project.getResourcesByName("ShaderFlat")[0];
 
     viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
-
+    canvas.requestPointerLock()
     Avatar.init();
     loadModels();
     viewport.initialize("MyViewport", graph, Avatar.camera, canvas);

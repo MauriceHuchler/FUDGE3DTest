@@ -55,12 +55,19 @@ namespace Avatar {
     }
 
     async function shoot(_event: MouseEvent): Promise<void> {
-        let instance = await ƒ.Project.createGraphInstance(bullet);
-        console.log(moveVector);
-        instance.mtxLocal.translation = ƒ.Vector3.SUM(camera.mtxWorld.translation,ƒ.Vector3.SCALE(moveVector,25));
-        instance.mtxLocal.rotation = camera.mtxWorld.rotation;
-        instance.mtxLocal.rotateY(-90);
-        Script.graph.addChild(instance);
+        if (_event.button == 0) {
+            let instance = await ƒ.Project.createGraphInstance(bullet);
+            instance.mtxLocal.translation = ƒ.Vector3.SUM(camera.mtxWorld.translation);
+            instance.mtxLocal.rotation = camera.mtxWorld.rotation;
+            instance.mtxLocal.rotateY(-90);
+            Script.graph.addChild(instance);
+        }
+
+
+        if (Script.canvas.requestPointerLock) {
+            Script.canvas.requestPointerLock();
+        }
+
 
     }
 
@@ -104,7 +111,9 @@ namespace Avatar {
         switch (cmpTag) {
             case Script.TAG.WALL:
                 console.log("hi");
-                avatar.mtxLocal.translate(ƒ.Vector3.ZERO(),true);
+                avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
+
+
         }
     }
 

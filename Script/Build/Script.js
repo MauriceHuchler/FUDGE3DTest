@@ -40,12 +40,16 @@ var Avatar;
         Avatar.avatar.mtxLocal.translate(moveVector, true);
     }
     async function shoot(_event) {
-        let instance = await ƒ.Project.createGraphInstance(bullet);
-        console.log(moveVector);
-        instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.camera.mtxWorld.translation, ƒ.Vector3.SCALE(moveVector, 25));
-        instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
-        instance.mtxLocal.rotateY(-90);
-        Script.graph.addChild(instance);
+        if (_event.button == 0) {
+            let instance = await ƒ.Project.createGraphInstance(bullet);
+            instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.camera.mtxWorld.translation);
+            instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
+            instance.mtxLocal.rotateY(-90);
+            Script.graph.addChild(instance);
+        }
+        if (Script.canvas.requestPointerLock) {
+            Script.canvas.requestPointerLock();
+        }
     }
     function update() {
         let deltaTime = ƒ.Loop.timeFrameGame / 1000;
@@ -228,6 +232,7 @@ var Script;
     ƒ.Debug.info("Main Program Template running!");
     Script.viewport = new ƒ.Viewport();
     window.addEventListener("load", start);
+    let isLocked;
     let mat;
     async function start(_event) {
         await ƒ.Project.loadResourcesFromHTML();
@@ -235,6 +240,7 @@ var Script;
         Script.graph = ƒ.Project.getResourcesByType(ƒ.Graph)[0];
         mat = ƒ.Project.getResourcesByName("ShaderFlat")[0];
         Script.viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
+        Script.canvas.requestPointerLock();
         Avatar.init();
         loadModels();
         Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.canvas);
