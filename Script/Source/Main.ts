@@ -58,8 +58,8 @@ namespace Script {
     // mesh.mtxLocal.translateZ(1);
     // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
     // cmpMesh.mtxPivot.translateY(0);
-    mesh.mtxLocal.translateZ(1);
-    mesh.mtxLocal.translateY(.35);
+    mesh.mtxLocal.translateZ(0.95);
+    mesh.mtxLocal.translateY(.2);
 
     // mesh2.mtxLocal.translateZ(2.5);
     console.log(mesh);
