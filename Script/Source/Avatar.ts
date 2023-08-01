@@ -5,6 +5,7 @@ namespace Avatar {
     export let avatarRB: ƒ.ComponentRigidbody;
     export let weapon: ƒ.Node;
     export let camera: ƒ.ComponentCamera;
+    export let cameraNode: ƒ.Node;
 
     let bullet: ƒ.Graph;
 
@@ -19,7 +20,8 @@ namespace Avatar {
 
         bullet = <ƒ.Graph>ƒ.Project.getResourcesByName("Bullet")[0];
 
-        camera = avatar.getComponent(ƒ.ComponentCamera);
+        cameraNode = avatar.getChildrenByName("Camera")[0];
+        camera = cameraNode.getComponent(ƒ.ComponentCamera);
 
         Script.canvas.addEventListener("pointermove", mouseMove);
         Script.canvas.addEventListener("mousedown", shoot);
@@ -83,9 +85,10 @@ namespace Avatar {
         let x: number = _event.movementX * -0.2;
         let y: number = _event.movementY * 0.2;
         avatar.mtxLocal.rotateY(x);
-        camera.mtxPivot.rotateX(y);
+        cameraNode.mtxLocal.rotateX(y);
+        // camera.mtxPivot.rotateX(y);
 
-        moveWeapon(y);
+        // moveWeapon(y);
 
     }
 

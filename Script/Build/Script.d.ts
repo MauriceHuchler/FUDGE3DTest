@@ -4,6 +4,7 @@ declare namespace Avatar {
     let avatarRB: ƒ.ComponentRigidbody;
     let weapon: ƒ.Node;
     let camera: ƒ.ComponentCamera;
+    let cameraNode: ƒ.Node;
     function init(): void;
 }
 declare namespace Script {

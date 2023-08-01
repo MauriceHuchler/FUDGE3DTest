@@ -58,14 +58,14 @@ namespace Script {
     // mesh.mtxLocal.translateZ(1);
     // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
     // cmpMesh.mtxPivot.translateY(0);
-    mesh.mtxLocal.translateZ(0.95);
-    mesh.mtxLocal.translateY(.2);
+    mesh.mtxLocal.translateZ(1.25);
+    mesh.mtxLocal.translateY(.6);
 
     // mesh2.mtxLocal.translateZ(2.5);
     console.log(mesh);
     graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
     // graph.addChild(mesh);
-    Avatar.avatar.addChild(mesh);
+    Avatar.cameraNode.addChild(mesh);
     console.log(Avatar.avatar);
     Avatar.weapon = mesh;
     
