@@ -85,7 +85,7 @@ var Avatar;
         }
         switch (cmpTag) {
             case Script.TAG.WALL:
-                console.log("hi");
+                console.log(_event.collisionNormal);
                 Avatar.avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
         }
     }
@@ -278,7 +278,7 @@ var Script;
         // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
         // cmpMesh.mtxPivot.translateY(0);
         mesh.mtxLocal.translateZ(1.25);
-        mesh.mtxLocal.translateY(.6);
+        mesh.mtxLocal.translateY(-.3);
         // mesh2.mtxLocal.translateZ(2.5);
         console.log(mesh);
         Script.graph = ƒ.Project.getResourcesByName("NewGraph")[0];

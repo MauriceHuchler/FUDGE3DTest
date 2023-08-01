@@ -114,7 +114,7 @@ namespace Avatar {
         }
         switch (cmpTag) {
             case Script.TAG.WALL:
-                console.log("hi");
+                console.log(_event.collisionNormal);
                 avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
 
 
