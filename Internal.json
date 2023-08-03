@@ -346,104 +346,6 @@
             "children": [
               {
                 "ƒ.Node": {
-                  "name": "FloorCube",
-                  "active": true,
-                  "components": {
-                    "ComponentTransform": [
-                      {
-                        "ƒ.ComponentTransform": {
-                          "local": {
-                            "translation": "[2, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 2, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentRigidbody": [
-                      {
-                        "ƒ.ComponentRigidbody": {
-                          "initialization": "TO_PIVOT",
-                          "friction": 0.2,
-                          "restitution": 0.2,
-                          "mass": 1,
-                          "dampTranslation": 0.1,
-                          "dampRotation": 0.1,
-                          "effectGravity": 1,
-                          "typeBody": "STATIC",
-                          "typeCollider": "CUBE",
-                          "isTrigger": false,
-                          "id": 2,
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentTag": [
-                      {
-                        "Script.ComponentTag": {
-                          "active": true
-                        }
-                      }
-                    ]
-                  },
-                  "children": [
-                    {
-                      "ƒ.Node": {
-                        "name": "Sprite",
-                        "active": true,
-                        "components": {
-                          "ComponentMaterial": [
-                            {
-                              "ƒ.ComponentMaterial": {
-                                "sortForAlpha": false,
-                                "clrPrimary": "[1, 1, 1, 1]",
-                                "clrSecondary": "[1, 1, 1, 1]",
-                                "pivot": {
-                                  "translation": "[0, 0]",
-                                  "rotation": 0,
-                                  "scaling": "[1, 1]"
-                                },
-                                "Component": {
-                                  "active": true
-                                },
-                                "idMaterial": "Material|2023-07-19T06:46:55.195Z|53916"
-                              }
-                            }
-                          ],
-                          "ComponentMesh": [
-                            {
-                              "ƒ.ComponentMesh": {
-                                "idMesh": "MeshCube|2023-07-19T06:43:29.441Z|44976",
-                                "pivot": {
-                                  "translation": "[0, 0, 0]",
-                                  "rotation": "[0, 0, 0]",
-                                  "scaling": "[1, 1, 1]"
-                                },
-                                "Component": {
-                                  "active": true
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        "children": []
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "ƒ.Node": {
                   "name": "Floor",
                   "active": true,
                   "components": {
@@ -535,6 +437,104 @@
                           ]
                         },
                         "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "FloorCube",
+                        "active": true,
+                        "components": {
+                          "ComponentTransform": [
+                            {
+                              "ƒ.ComponentTransform": {
+                                "local": {
+                                  "translation": "[2, 0, 0]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[1, 2, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentRigidbody": [
+                            {
+                              "ƒ.ComponentRigidbody": {
+                                "initialization": "TO_PIVOT",
+                                "friction": 0.2,
+                                "restitution": 0.2,
+                                "mass": 1,
+                                "dampTranslation": 0.1,
+                                "dampRotation": 0.1,
+                                "effectGravity": 1,
+                                "typeBody": "STATIC",
+                                "typeCollider": "CUBE",
+                                "isTrigger": false,
+                                "id": 2,
+                                "pivot": {
+                                  "translation": "[0, 0, 0]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[1, 1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentTag": [
+                            {
+                              "Script.ComponentTag": {
+                                "active": true
+                              }
+                            }
+                          ]
+                        },
+                        "children": [
+                          {
+                            "ƒ.Node": {
+                              "name": "Sprite",
+                              "active": true,
+                              "components": {
+                                "ComponentMaterial": [
+                                  {
+                                    "ƒ.ComponentMaterial": {
+                                      "sortForAlpha": false,
+                                      "clrPrimary": "[1, 1, 1, 1]",
+                                      "clrSecondary": "[1, 1, 1, 1]",
+                                      "pivot": {
+                                        "translation": "[0, 0]",
+                                        "rotation": 0,
+                                        "scaling": "[1, 1]"
+                                      },
+                                      "Component": {
+                                        "active": true
+                                      },
+                                      "idMaterial": "Material|2023-07-19T06:46:55.195Z|53916"
+                                    }
+                                  }
+                                ],
+                                "ComponentMesh": [
+                                  {
+                                    "ƒ.ComponentMesh": {
+                                      "idMesh": "MeshCube|2023-07-19T06:43:29.441Z|44976",
+                                      "pivot": {
+                                        "translation": "[0, 0, 0]",
+                                        "rotation": "[0, 0, 0]",
+                                        "scaling": "[1, 1, 1]"
+                                      },
+                                      "Component": {
+                                        "active": true
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "children": []
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -844,15 +844,7 @@
             "name": "Monster",
             "active": true,
             "components": {},
-            "children": [
-              {
-                "ƒ.GraphInstance": {
-                  "deserializeFromSource": true,
-                  "name": "FudgeMonster",
-                  "idSource": "Graph|2023-08-03T13:27:20.948Z|12796"
-                }
-              }
-            ]
+            "children": []
           }
         }
       ],
@@ -988,37 +980,6 @@
       "type": "Graph"
     }
   },
-  "MeshImport|2023-07-27T12:50:53.095Z|54550": {
-    "ƒ.MeshImport": {
-      "idResource": "MeshImport|2023-07-27T12:50:53.095Z|54550",
-      "name": "TwoMats.obj",
-      "type": "MeshImport",
-      "url": "Assets\\TwoMats.obj",
-      "filetype": "OBJ"
-    }
-  },
-  "TextureImage|2023-07-27T12:51:39.644Z|29372": {
-    "ƒ.TextureImage": {
-      "url": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Material1_BaseColor.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-27T12:51:39.644Z|29372",
-        "name": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Material1_BaseColor.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "TextureImage|2023-07-27T12:51:40.929Z|09375": {
-    "ƒ.TextureImage": {
-      "url": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Mateiral2_BaseColor.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-27T12:51:40.929Z|09375",
-        "name": "Assets\\Textures\\TexturesTwoMats\\TwoMats_Mateiral2_BaseColor.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
   "Material|2023-08-02T09:25:36.383Z|91663": {
     "ƒ.Material": {
       "name": "SmoothShader",
@@ -1039,7 +1000,7 @@
       "type": "TextureImage",
       "Texture": {
         "idResource": "TextureImage|2023-08-03T13:26:54.113Z|49626",
-        "name": "SpriteFudgeMonster",
+        "name": "SpriteFudgeMonsterIdle",
         "mipmap": "CRISP"
       }
     }
@@ -1053,7 +1014,7 @@
   },
   "Material|2023-08-03T13:27:57.071Z|85735": {
     "ƒ.Material": {
-      "name": "ShaderLitTextured",
+      "name": "ShaderFudgeMonster",
       "idResource": "Material|2023-08-03T13:27:57.071Z|85735",
       "shader": "ShaderLitTextured",
       "coat": {
@@ -1061,6 +1022,37 @@
           "color": "[1, 1, 1, 1]",
           "idTexture": "TextureImage|2023-08-03T13:26:54.113Z|49626"
         }
+      }
+    }
+  },
+  "TextureImage|2023-08-03T14:00:54.385Z|92687": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\Sprites\\Enemies\\FudgeMonster\\FudgeMonster_Attack.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-08-03T14:00:54.385Z|92687",
+        "name": "SpriteFudgeMonsterAttack",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "AnimationSprite|2023-08-03T14:08:14.469Z|58915": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-08-03T14:08:14.469Z|58915",
+      "idTexture": "TextureImage|2023-08-03T14:00:54.385Z|92687",
+      "frames": 60,
+      "wrapAfter": 6,
+      "start": "[0, 0]",
+      "size": "[128, 128]",
+      "next": "[128, 0]",
+      "wrap": "[0, 126]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-08-03T14:08:14.469Z|58915",
+        "name": "AnimationSprite",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 25,
+        "animationStructure": {}
       }
     }
   },
@@ -1112,7 +1104,7 @@
                     "clrPrimary": "[1, 1, 1, 1]",
                     "clrSecondary": "[1, 1, 1, 1]",
                     "pivot": {
-                      "translation": "[0.1666666716337204, 0]",
+                      "translation": "[0.6666666865348816, 0.10000000149011612]",
                       "rotation": 0,
                       "scaling": "[0.1666666716337204, 0.10158730298280716]"
                     },
@@ -1129,7 +1121,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idAnimation": "AnimationSprite|2023-08-03T13:28:44.047Z|58080",
+                    "idAnimation": "AnimationSprite|2023-08-03T14:08:14.469Z|58915",
                     "playmode": "loop",
                     "quantization": "discrete",
                     "scale": 1,
@@ -1159,7 +1151,7 @@
       "wrap": "[0, 126]",
       "Animation": {
         "idResource": "AnimationSprite|2023-08-03T13:28:44.047Z|58080",
-        "name": "AnimationSprite",
+        "name": "FudgeMonsterAnimationIdle",
         "labels": {},
         "events": {},
         "framesPerSecond": 30,
