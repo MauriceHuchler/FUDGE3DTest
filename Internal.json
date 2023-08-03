@@ -13,7 +13,7 @@
       "shader": "ShaderFlat",
       "coat": {
         "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
+          "color": "[0.7568627450980392, 0.5254901960784314, 0.3137254901960784, 1]",
           "diffuse": 1,
           "specular": 0
         }
@@ -387,6 +387,13 @@
                           }
                         }
                       }
+                    ],
+                    "ComponentTag": [
+                      {
+                        "Script.ComponentTag": {
+                          "active": true
+                        }
+                      }
                     ]
                   },
                   "children": [
@@ -580,7 +587,8 @@
                     "ComponentTag": [
                       {
                         "Script.ComponentTag": {
-                          "active": true
+                          "active": true,
+                          "tag": 1
                         }
                       }
                     ]
@@ -830,6 +838,22 @@
               }
             ]
           }
+        },
+        {
+          "ƒ.Node": {
+            "name": "Monster",
+            "active": true,
+            "components": {},
+            "children": [
+              {
+                "ƒ.GraphInstance": {
+                  "deserializeFromSource": true,
+                  "name": "FudgeMonster",
+                  "idSource": "Graph|2023-08-03T13:27:20.948Z|12796"
+                }
+              }
+            ]
+          }
         }
       ],
       "idResource": "Graph|2023-07-19T06:52:21.388Z|98781",
@@ -885,7 +909,8 @@
           {
             "Script.ComponentBullet": {
               "active": true,
-              "speed": 350
+              "speed": 350,
+              "lifetime": 300
             }
           }
         ],
@@ -1005,6 +1030,140 @@
           "diffuse": 1,
           "specular": 0
         }
+      }
+    }
+  },
+  "TextureImage|2023-08-03T13:26:54.113Z|49626": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\Sprites\\Enemies\\FudgeMonster\\spritesheet.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-08-03T13:26:54.113Z|49626",
+        "name": "SpriteFudgeMonster",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshSprite|2023-08-03T13:27:47.209Z|41224": {
+    "ƒ.MeshSprite": {
+      "idResource": "MeshSprite|2023-08-03T13:27:47.209Z|41224",
+      "name": "MeshSprite",
+      "type": "MeshSprite"
+    }
+  },
+  "Material|2023-08-03T13:27:57.071Z|85735": {
+    "ƒ.Material": {
+      "name": "ShaderLitTextured",
+      "idResource": "Material|2023-08-03T13:27:57.071Z|85735",
+      "shader": "ShaderLitTextured",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-08-03T13:26:54.113Z|49626"
+        }
+      }
+    }
+  },
+  "Graph|2023-08-03T13:27:20.948Z|12796": {
+    "ƒ.Graph": {
+      "name": "FudgeMonster",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[3, 1.2000000476837158, 3]",
+                "rotation": "[0, 90, 0]",
+                "scaling": "[3, 3, 3]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Sprite",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshSprite|2023-08-03T13:27:47.209Z|41224",
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0.1666666716337204, 0]",
+                      "rotation": 0,
+                      "scaling": "[0.1666666716337204, 0.10158730298280716]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2023-08-03T13:27:57.071Z|85735"
+                  }
+                }
+              ],
+              "ComponentAnimator": [
+                {
+                  "ƒ.ComponentAnimator": {
+                    "Component": {
+                      "active": true
+                    },
+                    "idAnimation": "AnimationSprite|2023-08-03T13:28:44.047Z|58080",
+                    "playmode": "loop",
+                    "quantization": "discrete",
+                    "scale": 1,
+                    "scaleWithGameTime": true,
+                    "animateInEditor": true
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2023-08-03T13:27:20.948Z|12796",
+      "type": "Graph"
+    }
+  },
+  "AnimationSprite|2023-08-03T13:28:44.047Z|58080": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-08-03T13:28:44.047Z|58080",
+      "idTexture": "TextureImage|2023-08-03T13:26:54.113Z|49626",
+      "frames": 60,
+      "wrapAfter": 6,
+      "start": "[0, 0]",
+      "size": "[128, 128]",
+      "next": "[128, 0]",
+      "wrap": "[0, 126]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-08-03T13:28:44.047Z|58080",
+        "name": "AnimationSprite",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 30,
+        "animationStructure": {}
       }
     }
   }
