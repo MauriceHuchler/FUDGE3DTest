@@ -4,29 +4,30 @@ namespace Script {
 
   export let viewport: ƒ.Viewport = new ƒ.Viewport();
   window.addEventListener("load", <EventListener>start);
-  let isLocked: boolean;
   let mat: ƒ.Material;
   export let graph: ƒ.Graph;
   export let canvas: HTMLCanvasElement;
+  export let gameIsRunning: boolean = false;
 
   async function start(_event: Event): Promise<void> {
     await ƒ.Project.loadResourcesFromHTML();
     canvas = document.querySelector("canvas");
-    graph = <ƒ.Graph>ƒ.Project.getResourcesByType(ƒ.Graph)[0];
+    graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
 
-   
 
-    mat = <ƒ.Material>ƒ.Project.getResourcesByName("ShaderFlat")[0];
+
+    mat = <ƒ.Material>ƒ.Project.getResourcesByName("SmoothShader")[0];
 
     viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.JOINTS_AND_COLLIDER;
     canvas.requestPointerLock()
-    loadModels();
+    await loadModels();
     Avatar.init();
     viewport.initialize("MyViewport", graph, Avatar.camera, canvas);
 
     // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();
+    gameIsRunning = true;
   }
 
   function update(_event: Event): void {
@@ -49,27 +50,24 @@ namespace Script {
 
 
   async function loadModels(): Promise<void> {
+    console.log("LOADING RESOURCES 0%");
     const loader: ƒ.GLTFLoader = await ƒ.GLTFLoader.LOAD("/Assets/GLTFs/Weapon.gltf");
+    console.log("LOADING RESOURCES 50%");
     const mesh: ƒ.Node = await loader.getScene();
     mesh.name = "Gun";
-    mesh.addComponent(new ƒ.ComponentMaterial(mat));
+    // mesh.addComponent(new ƒ.ComponentMaterial(mat));
     mesh.addComponent(new ƒ.ComponentTransform());
-    // let mesh2: ƒ.Node = ƒ.Project.createGraphInstance(mesh).;
-    // mesh.mtxLocal.translateZ(1);
-    // let cmpMesh = mesh.getComponent(ƒ.ComponentMesh);
-    // cmpMesh.mtxPivot.translateY(0);
-    mesh.mtxLocal.translateZ(1.25);
-    mesh.mtxLocal.translateY(-.3);
+    // let cmpAnimator: ƒ.ComponentAnimator = mesh.getComponent(ƒ.ComponentAnimator);
+    // cmpAnimator.playmode = ƒ.ANIMATION_PLAYMODE.PLAY_ONCE;
+    // cmpAnimator.quantization = ƒ.ANIMATION_QUANTIZATION.CONTINOUS;
+    mesh.mtxLocal.translateZ(2.25);
+    mesh.mtxLocal.translateY(-.5);
 
-    // mesh2.mtxLocal.translateZ(2.5);
     console.log(mesh);
-    graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
-    // graph.addChild(mesh);
-    Avatar.cameraNode.addChild(mesh);
-    console.log(Avatar.avatar);
+    console.log(graph);
     Avatar.weapon = mesh;
-    
+    console.log("LOADING RESOURCES 100%");
+
+
   }
-
-
 }

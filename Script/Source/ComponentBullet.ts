@@ -6,6 +6,9 @@ namespace Script {
         public static readonly iSubclass: number = ƒ.Component.registerSubclass(ComponentBullet);
 
         public speed: number = 1;
+        public lifetime: number = 5*60;
+        #lifeTimeCD: Cooldown;
+        #test123: number = 0;
         constructor() {
             super();
 
@@ -13,6 +16,7 @@ namespace Script {
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
 
+            this.#lifeTimeCD = new Cooldown(this.lifetime);
             // Listen to this component being added to or removed from a node
             this.addEventListener(ƒ.EVENT.COMPONENT_ADD, this.hndEvent);
             this.addEventListener(ƒ.EVENT.COMPONENT_REMOVE, this.hndEvent);
@@ -31,6 +35,9 @@ namespace Script {
                 case ƒ.EVENT.NODE_DESERIALIZED:
                     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
                     this.node.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.onCollisionEneter);
+                    this.#lifeTimeCD.startCooldown();
+                    this.#lifeTimeCD.onEndCooldown = this.destroy;
+
                     // if deserialized the node is now fully reconstructed and access to all its components and children is possible
                     break;
             }

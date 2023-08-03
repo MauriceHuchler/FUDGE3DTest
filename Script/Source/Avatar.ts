@@ -9,8 +9,16 @@ namespace Avatar {
 
     let bullet: ƒ.Graph;
 
-    let stepWidth: number = 2;
+    let isGrounded: boolean = false;
+    let jumpForce: number = 3.5;
+    let jumps: number = 1;
+    let jumpsLeft: number = jumps;
+    let velocity: number = 0;
+
+    let stepWidth: number = 3;
+    let maxCameraAngle: number = 45;
     let moveVector: ƒ.Vector3;
+    let yCameraRotation: number = 0;
 
 
     export function init(): void {
@@ -22,6 +30,8 @@ namespace Avatar {
 
         cameraNode = avatar.getChildrenByName("Camera")[0];
         camera = cameraNode.getComponent(ƒ.ComponentCamera);
+
+        cameraNode.addChild(weapon);
 
         Script.canvas.addEventListener("pointermove", mouseMove);
         Script.canvas.addEventListener("mousedown", shoot);
@@ -35,7 +45,6 @@ namespace Avatar {
     function movement(_deltaTime: number): void {
         let horizontal: number = 0;
         let vertical: number = 0;
-        let gravity = 1;
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.A])) {
             horizontal += 1 * stepWidth * _deltaTime;
         }
@@ -48,11 +57,21 @@ namespace Avatar {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S])) {
             vertical -= 1 * stepWidth * _deltaTime;
         }
-        moveVector = new ƒ.Vector3(horizontal, 0, vertical);
+        if (jumpsLeft > 0 && ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE])) {
+            velocity = jumpForce * _deltaTime;
+            jumpsLeft--;
+        }
+        moveVector = new ƒ.Vector3(horizontal, velocity, vertical);
 
         // avatarRB.mtxPivot.lookAt()
         // avatarRB.mtxPivot.lookAt()
         avatar.mtxLocal.translate(moveVector, true);
+
+        if (!isGrounded) {
+            // avatar.mtxLocal.translateY(gravity * _deltaTime);
+            velocity -= 0.05 * _deltaTime;
+        }
+
     }
 
     async function shoot(_event: MouseEvent): Promise<void> {
@@ -61,7 +80,7 @@ namespace Avatar {
             instance.mtxLocal.translation = ƒ.Vector3.SUM(weapon.mtxWorld.translation);
             instance.mtxLocal.rotation = camera.mtxWorld.rotation;
             instance.mtxLocal.rotateY(-90);
-            instance.mtxLocal.translate(new ƒ.Vector3(0,10,0),true);
+            instance.mtxLocal.translate(new ƒ.Vector3(0, 10, 0), true);
             Script.graph.addChild(instance);
         }
 
@@ -74,49 +93,77 @@ namespace Avatar {
     }
 
     function update(): void {
-        let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
+        if (Script.gameIsRunning) {
+            let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
 
-        movement(deltaTime);
-        rayCast();
+            groundCheck();
+            movement(deltaTime);
+            rayCast();
+        }
     }
 
     function mouseMove(_event: PointerEvent) {
-        // console.log(_event.movementX);
-        let x: number = _event.movementX * -0.2;
-        let y: number = _event.movementY * 0.2;
-        avatar.mtxLocal.rotateY(x);
-        cameraNode.mtxLocal.rotateX(y);
-        // camera.mtxPivot.rotateX(y);
+        if (Script.gameIsRunning) {
+            let x: number = _event.movementX * -0.2;
+            let y: number = _event.movementY * 0.2;
 
-        // moveWeapon(y);
+            avatar.mtxLocal.rotateY(x);
+            // cameraNode.mtxLocal.rotateX(y);
 
+            yCameraRotation += y;
+            // yCameraRotation = ƒ.Calc.clamp(yCameraRotation, -maxCameraAngle, maxCameraAngle);
+            cameraNode.mtxLocal.rotation = new ƒ.Vector3(yCameraRotation, 0, 0);
+        }
     }
 
-    function moveWeapon(_number: number): void {
-        // weapon.mtxLocal.rotation = camera.mtxPivot.rotation;
-        weapon.mtxLocal.rotateX(_number);
+    function groundCheck() {
+        let down: ƒ.Vector3 = ƒ.Vector3.SCALE(ƒ.Vector3.Y(), -1);
+        let floorCheck = ƒ.Physics.raycast(avatar.mtxLocal.translation, down, 0.5, true);
+
+        if (floorCheck.rigidbodyComponent != null && floorCheck.rigidbodyComponent.node.getComponent(Script.ComponentTag) != null) {
+            jumpsLeft = jumps;
+            if (ƒ.Vector3.DIFFERENCE(floorCheck.hitNormal, ƒ.Vector3.Y()) == ƒ.Vector3.ZERO()) {
+                isGrounded = true;
+            }
+            if (velocity < 0) {
+                velocity = 0;
+            }
+        }
+        else {
+            isGrounded = false;
+        }
     }
+
+
+    /**
+ * Return the angle in degrees between the two given vectors
+ */
+    function ANGLE(_from: ƒ.Vector3, _to: ƒ.Vector3): number {
+        let angle: number = Math.acos(ƒ.Vector3.DOT(_from, _to) / (_from.magnitude * _to.magnitude));
+        return angle * ƒ.Calc.rad2deg;
+    }
+
+
 
     function rayCast(): void {
         // let camera:
         let forward: ƒ.Vector3 = ƒ.Vector3.Z();
         forward.transform(camera.mtxWorld, false);
         let hitInfo = ƒ.Physics.raycast(camera.mtxWorld.translation, forward, 80, true);
-
-        // ƒ.Debug.log("hit", hitInfo.hit);
     }
 
     function onCollisionEnter(_event: ƒ.EventPhysics) {
-        console.log(_event);
         let cmpTag: Script.TAG = Script.getTag(_event);
         if (cmpTag == null) {
             return;
         }
         switch (cmpTag) {
             case Script.TAG.WALL:
-                console.log(_event.collisionNormal);
+                console.log(_event);
                 avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
-
+                break;
+            case Script.TAG.FLOOR:
+                isGrounded = true;
 
         }
     }
