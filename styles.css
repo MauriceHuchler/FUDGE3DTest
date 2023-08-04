@@ -15,3 +15,11 @@ canvas.fullscreen {
   width: 100vw; 
   height: 100vh; 
 }
+
+span#fps {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: yellow;
+  font-size: 20px;
+}

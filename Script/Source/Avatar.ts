@@ -25,6 +25,7 @@ namespace Avatar {
         avatar = Script.graph.getChildrenByName("Avatar")[0];
         avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
         avatarRB.dampRotation = 100;
+        
 
         bullet = <ƒ.Graph>ƒ.Project.getResourcesByName("Bullet")[0];
 
@@ -40,6 +41,13 @@ namespace Avatar {
         avatar.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.TRIGGER_ENTER, onCollisionEnter);
 
 
+    }
+
+    function resetPosition():void{
+            if(ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.G])){
+                avatar.mtxLocal.translation = ƒ.Vector3.Y();
+                                
+            }
     }
 
     function movement(_deltaTime: number): void {
@@ -98,6 +106,7 @@ namespace Avatar {
 
             groundCheck();
             movement(deltaTime);
+            resetPosition();
             rayCast();
         }
     }
@@ -111,7 +120,7 @@ namespace Avatar {
             // cameraNode.mtxLocal.rotateX(y);
 
             yCameraRotation += y;
-            // yCameraRotation = ƒ.Calc.clamp(yCameraRotation, -maxCameraAngle, maxCameraAngle);
+            yCameraRotation = ƒ.Calc.clamp(yCameraRotation, -maxCameraAngle, maxCameraAngle);
             cameraNode.mtxLocal.rotation = new ƒ.Vector3(yCameraRotation, 0, 0);
         }
     }

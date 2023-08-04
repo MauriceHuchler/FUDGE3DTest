@@ -6,9 +6,9 @@ namespace Script {
         public static readonly iSubclass: number = ƒ.Component.registerSubclass(ComponentBullet);
 
         public speed: number = 1;
-        public lifetime: number = 5*60;
+        public lifetime: number = 5*60; 
         #lifeTimeCD: Cooldown;
-        #test123: number = 0;
+
         constructor() {
             super();
 

@@ -2,19 +2,22 @@ namespace Script {
   import ƒ = FudgeCore;
   ƒ.Debug.info("Main Program Template running!");
 
+  let fps: HTMLSpanElement;
+
+
   export let viewport: ƒ.Viewport = new ƒ.Viewport();
   window.addEventListener("load", <EventListener>start);
   let mat: ƒ.Material;
   export let graph: ƒ.Graph;
   export let canvas: HTMLCanvasElement;
   export let gameIsRunning: boolean = false;
+  
 
   async function start(_event: Event): Promise<void> {
     await ƒ.Project.loadResourcesFromHTML();
+    fps = document.getElementById("fps") as HTMLElement;
     canvas = document.querySelector("canvas");
     graph = <ƒ.Graph>ƒ.Project.getResourcesByName("NewGraph")[0];
-
-
 
     mat = <ƒ.Material>ƒ.Project.getResourcesByName("SmoothShader")[0];
 
@@ -34,7 +37,10 @@ namespace Script {
     ƒ.Physics.simulate();  // if physics is included and used
     viewport.draw();
     // ƒ.AudioManager.default.update();
+    
     let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
+
+    fps.innerText = "FPS: " + ƒ.Loop.fpsRealAverage.toFixed(1);
   }
 
   export function getTag(_event: ƒ.EventPhysics): TAG {
@@ -60,7 +66,7 @@ namespace Script {
     // let cmpAnimator: ƒ.ComponentAnimator = mesh.getComponent(ƒ.ComponentAnimator);
     // cmpAnimator.playmode = ƒ.ANIMATION_PLAYMODE.PLAY_ONCE;
     // cmpAnimator.quantization = ƒ.ANIMATION_QUANTIZATION.CONTINOUS;
-    mesh.mtxLocal.translateZ(2.25);
+    mesh.mtxLocal.translateZ(1.25);
     mesh.mtxLocal.translateY(-.5);
 
     console.log(mesh);

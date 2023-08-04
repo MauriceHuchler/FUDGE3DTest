@@ -23,6 +23,15 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    class ComponentEnemy extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        constructor();
+        hndEvent: (_event: Event) => void;
+        update: () => void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     enum TAG {
         FLOOR = 0,
         WALL = 1,
