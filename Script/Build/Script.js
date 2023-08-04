@@ -2,15 +2,22 @@
 var Avatar;
 (function (Avatar) {
     var ƒ = FudgeCore;
+    let camera;
+    let cameraThird;
+    let cameraCounter = 0;
+    Avatar.cameras = [];
     let bullet;
     let isGrounded = false;
+    let canMoveX = true;
+    let canMoveY = true;
     let jumpForce = 3;
     let jumps = 1;
     let jumpsLeft = jumps;
     let velocity = 0;
     let gravity = 0.1;
+    let maxGravity = 0.3;
     let stepWidth = 4;
-    let maxCameraAngle = 45;
+    let maxCameraAngle = 80;
     let moveVector;
     let yCameraRotation = 0;
     function init() {
@@ -19,17 +26,29 @@ var Avatar;
         Avatar.avatarRB.dampRotation = 100;
         bullet = ƒ.Project.getResourcesByName("Bullet")[0];
         Avatar.cameraNode = Avatar.avatar.getChildrenByName("Camera")[0];
-        Avatar.camera = Avatar.cameraNode.getComponent(ƒ.ComponentCamera);
+        let cameraNodeThird = Avatar.avatar.getChildrenByName("CameraThird")[0];
+        camera = Avatar.cameraNode.getComponent(ƒ.ComponentCamera);
+        cameraThird = cameraNodeThird.getComponent(ƒ.ComponentCamera);
+        Avatar.cameras.push(camera, cameraThird);
         Avatar.cameraNode.addChild(Avatar.weapon);
         Script.canvas.addEventListener("pointermove", mouseMove);
         Script.canvas.addEventListener("mousedown", shoot);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         Avatar.avatar.getComponent(ƒ.ComponentRigidbody).addEventListener("TriggerEnteredCollision" /* TRIGGER_ENTER */, onCollisionEnter);
+        Avatar.avatar.getComponent(ƒ.ComponentRigidbody).addEventListener("TriggerLeftCollision" /* TRIGGER_EXIT */, onCollisionExit);
     }
     Avatar.init = init;
-    function resetPosition() {
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.G])) {
-            Avatar.avatar.mtxLocal.translation = ƒ.Vector3.Y();
+    function update() {
+        if (Script.gameIsRunning) {
+            let deltaTime = ƒ.Loop.timeFrameGame / 1000;
+            movement(deltaTime);
+            groundCheck();
+            resetPosition();
+            rayCast();
+            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.V])) {
+                cameraCounter++;
+                Script.viewport.camera = Avatar.cameras[cameraCounter % Avatar.cameras.length];
+            }
         }
     }
     function movement(_deltaTime) {
@@ -51,35 +70,39 @@ var Avatar;
             velocity = jumpForce * _deltaTime;
             jumpsLeft--;
         }
+        if (!canMoveY) {
+            horizontal = 0;
+        }
+        if (!canMoveX) {
+            vertical = 0;
+        }
         moveVector = new ƒ.Vector3(horizontal, velocity, vertical);
-        // avatarRB.mtxPivot.lookAt()
-        // avatarRB.mtxPivot.lookAt()
         Avatar.avatar.mtxLocal.translate(moveVector, true);
         if (!isGrounded) {
-            // avatar.mtxLocal.translateY(gravity * _deltaTime);
             velocity -= gravity * _deltaTime;
+            velocity = ƒ.Calc.clamp(velocity, -maxGravity, maxGravity);
+            console.log(velocity);
+        }
+        else if (isGrounded) {
+            jumpsLeft = jumps;
+        }
+    }
+    function resetPosition() {
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.G])) {
+            Avatar.avatar.mtxLocal.translation = ƒ.Vector3.SCALE(ƒ.Vector3.Y(), 5);
         }
     }
     async function shoot(_event) {
         if (_event.button == 0) {
             let instance = await ƒ.Project.createGraphInstance(bullet);
             instance.mtxLocal.translation = ƒ.Vector3.SUM(Avatar.weapon.mtxWorld.translation);
-            instance.mtxLocal.rotation = Avatar.camera.mtxWorld.rotation;
+            instance.mtxLocal.rotation = camera.mtxWorld.rotation;
             instance.mtxLocal.rotateY(-90);
             instance.mtxLocal.translate(new ƒ.Vector3(0, 10, 0), true);
             Script.graph.addChild(instance);
         }
         if (Script.canvas.requestPointerLock) {
             Script.canvas.requestPointerLock();
-        }
-    }
-    function update() {
-        if (Script.gameIsRunning) {
-            let deltaTime = ƒ.Loop.timeFrameGame / 1000;
-            groundCheck();
-            movement(deltaTime);
-            resetPosition();
-            rayCast();
         }
     }
     function mouseMove(_event) {
@@ -94,33 +117,36 @@ var Avatar;
         }
     }
     function groundCheck() {
+        let rayLength = 0.7;
+        let tolerance = 0.1;
         let down = ƒ.Vector3.SCALE(ƒ.Vector3.Y(), -1);
-        let floorCheck = ƒ.Physics.raycast(Avatar.avatar.mtxLocal.translation, down, 0.5, true);
-        if (floorCheck.rigidbodyComponent != null && floorCheck.rigidbodyComponent.node.getComponent(Script.ComponentTag) != null) {
-            jumpsLeft = jumps;
-            if (ƒ.Vector3.DIFFERENCE(floorCheck.hitNormal, ƒ.Vector3.Y()) == ƒ.Vector3.ZERO()) {
+        let floorCheck = ƒ.Physics.raycast(Avatar.avatar.mtxLocal.translation, down, rayLength, true);
+        // if fall from high height
+        if (floorCheck.hit && Math.abs(velocity) >= maxGravity) {
+            velocity = 0;
+            isGrounded = true;
+        }
+        // jump mechanic
+        if (floorCheck.hit && floorCheck.rigidbodyComponent != null && floorCheck.rigidbodyComponent.node.getComponent(Script.ComponentTag) != null) {
+            if (floorCheck.hitDistance >= rayLength - tolerance && ƒ.Vector3.DIFFERENCE(floorCheck.hitNormal, ƒ.Vector3.Y()).equals(ƒ.Vector3.ZERO())) {
                 isGrounded = true;
-            }
-            if (velocity < 0) {
-                velocity = 0;
+                if (floorCheck.hitDistance < rayLength) {
+                    Avatar.avatar.mtxLocal.translateY(rayLength - floorCheck.hitDistance);
+                }
+                if (velocity < 0) {
+                    velocity = 0;
+                }
             }
         }
         else {
             isGrounded = false;
         }
     }
-    /**
- * Return the angle in degrees between the two given vectors
- */
-    function ANGLE(_from, _to) {
-        let angle = Math.acos(ƒ.Vector3.DOT(_from, _to) / (_from.magnitude * _to.magnitude));
-        return angle * ƒ.Calc.rad2deg;
-    }
     function rayCast() {
         // let camera:
         let forward = ƒ.Vector3.Z();
-        forward.transform(Avatar.camera.mtxWorld, false);
-        let hitInfo = ƒ.Physics.raycast(Avatar.camera.mtxWorld.translation, forward, 80, true);
+        forward.transform(camera.mtxWorld, false);
+        let hitInfo = ƒ.Physics.raycast(camera.mtxWorld.translation, forward, 80, true);
     }
     function onCollisionEnter(_event) {
         let cmpTag = Script.getTag(_event);
@@ -129,12 +155,16 @@ var Avatar;
         }
         switch (cmpTag) {
             case Script.TAG.WALL:
-                console.log(_event);
-                Avatar.avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
+                let normal = _event.collisionNormal;
+                console.log(normal.toString());
+                Avatar.avatar.mtxWorld.translate(normal);
                 break;
             case Script.TAG.FLOOR:
-                isGrounded = true;
         }
+    }
+    function onCollisionExit(_event) {
+        canMoveX = true;
+        canMoveY = true;
     }
 })(Avatar || (Avatar = {}));
 var Script;
@@ -390,7 +420,7 @@ var Script;
         Script.canvas.requestPointerLock();
         await loadModels();
         Avatar.init();
-        Script.viewport.initialize("MyViewport", Script.graph, Avatar.camera, Script.canvas);
+        Script.viewport.initialize("MyViewport", Script.graph, Avatar.cameras[0], Script.canvas);
         // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);

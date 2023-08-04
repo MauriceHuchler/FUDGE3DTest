@@ -11,7 +11,7 @@ namespace Script {
   export let graph: ƒ.Graph;
   export let canvas: HTMLCanvasElement;
   export let gameIsRunning: boolean = false;
-  
+
 
   async function start(_event: Event): Promise<void> {
     await ƒ.Project.loadResourcesFromHTML();
@@ -25,7 +25,7 @@ namespace Script {
     canvas.requestPointerLock()
     await loadModels();
     Avatar.init();
-    viewport.initialize("MyViewport", graph, Avatar.camera, canvas);
+    viewport.initialize("MyViewport", graph, Avatar.cameras[0], canvas);
 
     // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -37,7 +37,7 @@ namespace Script {
     ƒ.Physics.simulate();  // if physics is included and used
     viewport.draw();
     // ƒ.AudioManager.default.update();
-    
+
     let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
 
     fps.innerText = "FPS: " + ƒ.Loop.fpsRealAverage.toFixed(1);

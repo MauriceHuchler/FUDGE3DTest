@@ -4,20 +4,26 @@ namespace Avatar {
     export let avatar: ƒ.Node;
     export let avatarRB: ƒ.ComponentRigidbody;
     export let weapon: ƒ.Node;
-    export let camera: ƒ.ComponentCamera;
+    let camera: ƒ.ComponentCamera;
+    let cameraThird: ƒ.ComponentCamera;
+    let cameraCounter: number = 0;
+    export let cameras: ƒ.ComponentCamera[] = [];
     export let cameraNode: ƒ.Node;
 
     let bullet: ƒ.Graph;
 
     let isGrounded: boolean = false;
+    let canMoveX: boolean = true;
+    let canMoveY: boolean = true;
     let jumpForce: number = 3;
     let jumps: number = 1;
     let jumpsLeft: number = jumps;
     let velocity: number = 0;
-    let gravity: number = 0.1
+    let gravity: number = 0.1;
+    let maxGravity: number = 0.3;
 
     let stepWidth: number = 4;
-    let maxCameraAngle: number = 45;
+    let maxCameraAngle: number = 80;
     let moveVector: ƒ.Vector3;
     let yCameraRotation: number = 0;
 
@@ -26,12 +32,16 @@ namespace Avatar {
         avatar = Script.graph.getChildrenByName("Avatar")[0];
         avatarRB = avatar.getComponent(ƒ.ComponentRigidbody);
         avatarRB.dampRotation = 100;
-        
+
 
         bullet = <ƒ.Graph>ƒ.Project.getResourcesByName("Bullet")[0];
 
         cameraNode = avatar.getChildrenByName("Camera")[0];
+        let cameraNodeThird = avatar.getChildrenByName("CameraThird")[0];
         camera = cameraNode.getComponent(ƒ.ComponentCamera);
+        cameraThird = cameraNodeThird.getComponent(ƒ.ComponentCamera);
+
+        cameras.push(camera, cameraThird);
 
         cameraNode.addChild(weapon);
 
@@ -40,16 +50,31 @@ namespace Avatar {
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         avatar.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.TRIGGER_ENTER, onCollisionEnter);
+        avatar.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.TRIGGER_EXIT, onCollisionExit);
 
 
     }
 
-    function resetPosition():void{
-            if(ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.G])){
-                avatar.mtxLocal.translation = ƒ.Vector3.Y();
-                                
+    function update(): void {
+        if (Script.gameIsRunning) {
+            let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
+            movement(deltaTime);
+            groundCheck();
+            resetPosition();
+            rayCast();
+
+
+            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.V])) {
+                cameraCounter++;
+                Script.viewport.camera = cameras[cameraCounter % cameras.length]
             }
+
+
+        }
+
     }
+
+
 
     function movement(_deltaTime: number): void {
         let horizontal: number = 0;
@@ -70,17 +95,33 @@ namespace Avatar {
             velocity = jumpForce * _deltaTime;
             jumpsLeft--;
         }
+
+        if (!canMoveY) {
+            horizontal = 0;
+        }
+        if (!canMoveX) {
+            vertical = 0;
+        }
         moveVector = new ƒ.Vector3(horizontal, velocity, vertical);
 
-        // avatarRB.mtxPivot.lookAt()
-        // avatarRB.mtxPivot.lookAt()
         avatar.mtxLocal.translate(moveVector, true);
 
         if (!isGrounded) {
-            // avatar.mtxLocal.translateY(gravity * _deltaTime);
             velocity -= gravity * _deltaTime;
+            velocity = ƒ.Calc.clamp(velocity, -maxGravity, maxGravity);
+            console.log(velocity);
+        }
+        else if (isGrounded) {
+            jumpsLeft = jumps;
         }
 
+    }
+
+    function resetPosition(): void {
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.G])) {
+            avatar.mtxLocal.translation = ƒ.Vector3.SCALE(ƒ.Vector3.Y(), 5);
+
+        }
     }
 
     async function shoot(_event: MouseEvent): Promise<void> {
@@ -101,16 +142,7 @@ namespace Avatar {
 
     }
 
-    function update(): void {
-        if (Script.gameIsRunning) {
-            let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
 
-            groundCheck();
-            movement(deltaTime);
-            resetPosition();
-            rayCast();
-        }
-    }
 
     function mouseMove(_event: PointerEvent) {
         if (Script.gameIsRunning) {
@@ -127,30 +159,32 @@ namespace Avatar {
     }
 
     function groundCheck() {
+        let rayLength: number = 0.7;
+        let tolerance: number = 0.1;
         let down: ƒ.Vector3 = ƒ.Vector3.SCALE(ƒ.Vector3.Y(), -1);
-        let floorCheck = ƒ.Physics.raycast(avatar.mtxLocal.translation, down, 0.5, true);
+        let floorCheck = ƒ.Physics.raycast(avatar.mtxLocal.translation, down, rayLength, true);
+        // if fall from high height
+        if (floorCheck.hit && Math.abs(velocity) >= maxGravity) {
+            velocity = 0;
+            isGrounded = true;
+        }
 
-        if (floorCheck.rigidbodyComponent != null && floorCheck.rigidbodyComponent.node.getComponent(Script.ComponentTag) != null) {
-            jumpsLeft = jumps;
-            if (ƒ.Vector3.DIFFERENCE(floorCheck.hitNormal, ƒ.Vector3.Y()) == ƒ.Vector3.ZERO()) {
+        // jump mechanic
+        if (floorCheck.hit && floorCheck.rigidbodyComponent != null && floorCheck.rigidbodyComponent.node.getComponent(Script.ComponentTag) != null) {
+            if (floorCheck.hitDistance >= rayLength - tolerance && ƒ.Vector3.DIFFERENCE(floorCheck.hitNormal, ƒ.Vector3.Y()).equals(ƒ.Vector3.ZERO())) {
                 isGrounded = true;
-            }
-            if (velocity < 0) {
-                velocity = 0;
+                if (floorCheck.hitDistance < rayLength) {
+                    avatar.mtxLocal.translateY(rayLength - floorCheck.hitDistance);
+                }
+                if (velocity < 0) {
+                    velocity = 0;
+                }
             }
         }
         else {
             isGrounded = false;
+
         }
-    }
-
-
-    /**
- * Return the angle in degrees between the two given vectors
- */
-    function ANGLE(_from: ƒ.Vector3, _to: ƒ.Vector3): number {
-        let angle: number = Math.acos(ƒ.Vector3.DOT(_from, _to) / (_from.magnitude * _to.magnitude));
-        return angle * ƒ.Calc.rad2deg;
     }
 
 
@@ -169,15 +203,19 @@ namespace Avatar {
         }
         switch (cmpTag) {
             case Script.TAG.WALL:
-                console.log(_event);
-                avatar.mtxLocal.translate(ƒ.Vector3.ZERO(), true);
+                let normal = _event.collisionNormal;
+                console.log(normal.toString());
+                avatar.mtxWorld.translate(normal);
                 break;
             case Script.TAG.FLOOR:
-                isGrounded = true;
 
         }
+
+
     }
 
-
-}
+    function onCollisionExit(_event: ƒ.EventPhysics) {
+        canMoveX = true;
+        canMoveY = true;
+    }
 
