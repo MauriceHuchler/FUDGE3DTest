@@ -10,12 +10,13 @@ namespace Avatar {
     let bullet: ƒ.Graph;
 
     let isGrounded: boolean = false;
-    let jumpForce: number = 3.5;
+    let jumpForce: number = 3;
     let jumps: number = 1;
     let jumpsLeft: number = jumps;
     let velocity: number = 0;
+    let gravity: number = 0.1
 
-    let stepWidth: number = 3;
+    let stepWidth: number = 4;
     let maxCameraAngle: number = 45;
     let moveVector: ƒ.Vector3;
     let yCameraRotation: number = 0;
@@ -77,7 +78,7 @@ namespace Avatar {
 
         if (!isGrounded) {
             // avatar.mtxLocal.translateY(gravity * _deltaTime);
-            velocity -= 0.05 * _deltaTime;
+            velocity -= gravity * _deltaTime;
         }
 
     }

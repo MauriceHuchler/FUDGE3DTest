@@ -29,7 +29,7 @@ namespace Script {
 
     // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    ƒ.Loop.start();
+    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
     gameIsRunning = true;
   }
 

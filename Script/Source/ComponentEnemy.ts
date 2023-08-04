@@ -34,7 +34,7 @@ namespace Script {
 
         public update = () => {
             let deltaTime: number = ƒ.Loop.timeFrameGame / 1000;
-            ƒ.Vector3.
+            // ƒ.
         }
 
 

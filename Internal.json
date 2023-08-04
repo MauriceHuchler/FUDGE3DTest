@@ -1108,7 +1108,8 @@
               }
             }
           }
-        ]
+        ],
+        "ComponentFaceCamera": []
       },
       "children": [
         {
@@ -1138,7 +1139,7 @@
                     "clrPrimary": "[1, 1, 1, 1]",
                     "clrSecondary": "[1, 1, 1, 1]",
                     "pivot": {
-                      "translation": "[0.6666666865348816, 0.30000001192092896]",
+                      "translation": "[0.6666666865348816, 0.699999988079071]",
                       "rotation": 0,
                       "scaling": "[0.1666666716337204, 0.10158730298280716]"
                     },
@@ -1161,6 +1162,13 @@
                     "scale": 1,
                     "scaleWithGameTime": true,
                     "animateInEditor": true
+                  }
+                }
+              ],
+              "ComponentFaceCamera": [
+                {
+                  "ƒ.ComponentFaceCamera": {
+                    "active": true
                   }
                 }
               ]
